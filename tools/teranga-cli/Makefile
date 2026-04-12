@@ -3,7 +3,7 @@
 # ============================================================
 
 CC      := gcc
-CFLAGS  := -Wall -Wextra -Wpedantic -O2 -std=c11
+CFLAGS  := -Wall -Wextra -Wpedantic -O2 -std=c11 -Iinc
 LDFLAGS :=
 TARGET  := teranga
 SRC     := src/main.c
