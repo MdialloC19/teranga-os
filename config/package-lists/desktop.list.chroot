@@ -1,0 +1,86 @@
+# ============================================================
+# TérangaOS Desktop — Paquets KDE Plasma 6
+# Interface Windows-like pour les postes standards
+# ============================================================
+
+# --- KDE Plasma Desktop ---
+task-kde-desktop
+kde-plasma-desktop
+plasma-workspace
+sddm
+sddm-theme-breeze
+
+# --- KDE Applications essentielles ---
+dolphin
+dolphin-plugins
+konsole
+kate
+ark
+gwenview
+okular
+spectacle
+kcalc
+kscreen
+plasma-nm
+plasma-pa
+bluedevil
+powerdevil
+kde-config-screenlocker
+kde-config-sddm
+kmenuedit
+kfind
+kinfocenter
+ksystemlog
+
+# --- Thèmes et apparence ---
+breeze
+breeze-gtk-theme
+breeze-icon-theme
+breeze-cursor-theme
+kde-style-breeze
+kvantum
+qt6-style-kvantum
+
+# --- Suite bureautique ---
+libreoffice
+libreoffice-kde5
+libreoffice-l10n-fr
+libreoffice-help-fr
+libreoffice-style-breeze
+
+# --- Navigateur ---
+firefox-esr
+firefox-esr-l10n-fr
+webext-ublock-origin-firefox
+
+# --- Email ---
+thunderbird
+thunderbird-l10n-fr
+
+# --- Messagerie et visio ---
+# Element Desktop (via dépôt externe — ajouté par hook)
+# Jitsi Meet (webapp — pas de paquet desktop nécessaire)
+
+# --- Stockage cloud ---
+# Nextcloud Desktop (via dépôt externe — ajouté par hook)
+
+# --- Multimédia ---
+vlc
+vlc-plugin-base
+
+# --- Utilitaires graphiques ---
+filezilla
+keepassxc
+redshift
+flameshot
+
+# --- Gestion de paquets graphique ---
+plasma-discover
+plasma-discover-backend-flatpak
+flatpak
+
+# --- Polices ---
+fonts-noto
+fonts-noto-color-emoji
+fonts-liberation
+fonts-dejavu

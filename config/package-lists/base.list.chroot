@@ -1,0 +1,66 @@
+# ============================================================
+# TérangaOS — Paquets de base (toutes éditions)
+# Ces paquets sont installés dans TOUTES les éditions
+# ============================================================
+
+# --- Système ---
+linux-image-amd64
+firmware-linux-free
+firmware-linux-nonfree
+firmware-misc-nonfree
+
+# --- Boot ---
+grub-efi-amd64
+efibootmgr
+
+# --- Réseau ---
+network-manager
+wpasupplicant
+wireless-tools
+curl
+wget
+openssh-client
+
+# --- Sécurité ---
+apparmor
+apparmor-utils
+ufw
+clamav
+clamav-daemon
+cryptsetup
+gnupg
+
+# --- Système de fichiers ---
+ntfs-3g
+exfat-fuse
+exfat-utils
+dosfstools
+
+# --- Utilitaires ---
+bash-completion
+htop
+nano
+unzip
+zip
+p7zip-full
+rsync
+tree
+lsb-release
+apt-transport-https
+ca-certificates
+locales
+console-setup
+
+# --- Impression ---
+cups
+cups-bsd
+printer-driver-all
+
+# --- Son ---
+pipewire
+pipewire-pulse
+wireplumber
+
+# --- Langues ---
+locales-all
+hunspell-fr

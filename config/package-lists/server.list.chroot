@@ -1,0 +1,65 @@
+# ============================================================
+# TérangaOS Server — Paquets serveur
+# Installation minimale headless
+# RAM minimum : 512 Mo
+# ============================================================
+
+# --- Serveur SSH ---
+openssh-server
+
+# --- Gestion système ---
+tmux
+screen
+vim
+sudo
+logrotate
+cron
+
+# --- Monitoring ---
+prometheus-node-exporter
+iotop
+nmon
+sysstat
+
+# --- Réseau ---
+nftables
+fail2ban
+dnsutils
+net-tools
+traceroute
+tcpdump
+nmap
+iperf3
+
+# --- Conteneurs ---
+podman
+buildah
+
+# --- Gestion de configuration ---
+ansible
+
+# --- Stockage ---
+lvm2
+mdadm
+smartmontools
+
+# --- Sauvegarde ---
+borgbackup
+rclone
+
+# --- Logs ---
+rsyslog
+logwatch
+
+# --- Base de données client ---
+postgresql-client
+mariadb-client
+
+# --- Web ---
+nginx-light
+
+# --- Sécurité ---
+aide
+rkhunter
+lynis
+auditd

@@ -1,0 +1,47 @@
+# TérangaOS — .gitignore
+
+# Build output
+build/
+*.iso
+*.img
+*.hybrid.iso
+
+# live-build (fichiers auto-générés)
+.build/
+.build_cache/
+cache/
+chroot/
+binary/
+local/
+config/binary
+config/bootstrap
+config/source
+config/common
+
+# Temporary files
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+._*
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Secrets (ne jamais committer)
+*.key
+*.pem
+*.gpg
+*.p12
+secrets/
+souverainete_numerique_senegal.md
+teranga_os_interface_windows.md
+.env

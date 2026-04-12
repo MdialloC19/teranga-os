@@ -1,0 +1,72 @@
+# ============================================================
+# TérangaOS RPi — Paquets pour Raspberry Pi 5
+# Bureau Xfce optimisé pour ARM64
+# RAM minimum : 2 Go (recommandé : 4-8 Go)
+# ============================================================
+
+# --- Xfce Desktop (léger, fluide sur RPi) ---
+xfce4
+xfce4-goodies
+xfce4-terminal
+xfce4-power-manager
+xfce4-notifyd
+xfce4-screenshooter
+xfce4-taskmanager
+xfce4-whiskermenu-plugin
+xfce4-clipman-plugin
+xfce4-pulseaudio-plugin
+lightdm
+lightdm-gtk-greeter
+lightdm-gtk-greeter-settings
+
+# --- Gestionnaire de fichiers ---
+thunar
+thunar-archive-plugin
+thunar-volman
+
+# --- Suite bureautique ---
+libreoffice-writer
+libreoffice-calc
+libreoffice-impress
+libreoffice-l10n-fr
+libreoffice-help-fr
+libreoffice-gtk3
+
+# --- Navigateur ---
+firefox-esr
+firefox-esr-l10n-fr
+
+# --- Email ---
+thunderbird
+thunderbird-l10n-fr
+
+# --- Messagerie ---
+# Element Desktop sera installé via script (pas dans les repos Debian ARM)
+
+# --- Stockage cloud ---
+nextcloud-desktop
+
+# --- Multimédia ---
+vlc
+celluloid
+ristretto
+
+# --- Utilitaires ---
+mousepad
+atril
+galculator
+file-roller
+gnome-disk-utility
+baobab
+synaptic
+gparted
+
+# --- Polices ---
+fonts-noto
+fonts-noto-color-emoji
+fonts-liberation
+fonts-dejavu
+
+# --- Outils RPi spécifiques ---
+raspi-config
+rpi-imager
