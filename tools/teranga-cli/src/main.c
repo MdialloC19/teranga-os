@@ -100,7 +100,7 @@ void print_banner(void)
     printf("\n");
     printf(COLOR_GREEN COLOR_BOLD);
     printf("  ╔═══════════════════════════════════════╗\n");
-    printf("  ║         🇸🇳  TérangaOS  🇸🇳              ║\n");
+    printf("  ║         🇸🇳  TérangaOS 🇸🇳            :l   ║\n");
     printf("  ║   Distribution Linux souveraine       ║\n");
     printf("  ╚═══════════════════════════════════════╝\n");
     printf(COLOR_RESET);
@@ -374,11 +374,51 @@ void cmd_update(void)
     printf("\n%s  Système mis à jour avec succès !\n\n", OK_ICON);
 }
 
+/* --- teranga reboot --- */
+void cmd_reboot(void)
+{
+    /* 1. Vérifier les droits root */
+    if (geteuid() != 0) {
+        printf(COLOR_RED "  Erreur : cette commande nécessite les droits root\n" COLOR_RESET);
+        printf("  Usage : sudo teranga reboot\n\n");
+        return;
+    }
+
+    printf("\n");
+    printf(COLOR_BOLD "  🔁 Redémarrage TérangaOS\n" COLOR_RESET);
+    printf("  ────────────────────────\n\n");
+
+    /* 2. Confirmation obligatoire */
+    printf(COLOR_YELLOW "  Attention : le système va redémarrer.\n" COLOR_RESET);
+    printf("  Tous les programmes non sauvegardés seront perdus.\n\n");
+    printf("  Confirmer le redémarrage ? [o/N] : ");
+    fflush(stdout);
+
+    char reponse[8];
+    if (fgets(reponse, sizeof(reponse), stdin) == NULL ||
+        (reponse[0] != 'o' && reponse[0] != 'O')) {
+        printf("\n%s  Redémarrage annulé.\n\n", WARN_ICON);
+        return;
+    }
+
+    /* 3. Délai de 3 secondes avec compte à rebours */
+    printf("\n");
+    for (int i = 3; i > 0; i--) {
+        printf("  Redémarrage dans %d secondes...\r", i);
+        fflush(stdout);
+        sleep(1);
+    }
+    printf("  Redémarrage en cours...          \n\n");
+
+    /* 4. Redémarrer */
+    system("reboot");
+}
+
 /* --- teranga help --- */
 void cmd_help(void)
 {
     print_banner();
-    
+
     printf("  Usage : teranga <commande>\n\n");
     printf("  Commandes disponibles :\n\n");
     printf("    " COLOR_GREEN "version" COLOR_RESET "     Afficher la version de TérangaOS\n");
@@ -386,12 +426,14 @@ void cmd_help(void)
     printf("    " COLOR_GREEN "status" COLOR_RESET "      État des services et applications\n");
     printf("    " COLOR_GREEN "security" COLOR_RESET "    Vérification de sécurité\n");
     printf("    " COLOR_GREEN "update" COLOR_RESET "      Mettre à jour le système (sudo)\n");
+    printf("    " COLOR_GREEN "reboot" COLOR_RESET "      Redémarrer le système (sudo)\n");
     printf("    " COLOR_GREEN "help" COLOR_RESET "        Afficher cette aide\n");
     printf("\n");
     printf("  Exemples :\n");
     printf("    teranga info          # Voir les infos système\n");
     printf("    teranga security      # Audit de sécurité\n");
     printf("    sudo teranga update   # Mettre à jour\n");
+    printf("    sudo teranga reboot   # Redémarrer\n");
     printf("\n");
     printf("  " COLOR_BLUE "%s" COLOR_RESET "\n\n", TERANGA_REPO);
 }
@@ -418,6 +460,8 @@ int main(int argc, char *argv[])
         cmd_security();
     else if (strcmp(command, "update") == 0)
         cmd_update();
+    else if (strcmp(command, "reboot") == 0)
+        cmd_reboot();
     else if (strcmp(command, "help") == 0 || strcmp(command, "--help") == 0 || strcmp(command, "-h") == 0)
         cmd_help();
     else {
@@ -425,6 +469,6 @@ int main(int argc, char *argv[])
         printf("  Tapez 'teranga help' pour voir les commandes disponibles.\n\n");
         return 1;
     }
-    
+
     return 0;
 }
