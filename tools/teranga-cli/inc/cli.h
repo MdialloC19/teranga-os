@@ -11,7 +11,12 @@
 #ifndef CLI_H
 #define CLI_H
 
-/* --- Includes système nécessaires aux prototypes --- */
+/*
+ * Activer les extensions POSIX (popen, pclose, etc.)
+ * Doit être défini AVANT tout #include
+ */
+#define _POSIX_C_SOURCE 200809L
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

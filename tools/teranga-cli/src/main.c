@@ -100,7 +100,7 @@ void print_banner(void)
     printf("\n");
     printf(COLOR_GREEN COLOR_BOLD);
     printf("  ╔═══════════════════════════════════════╗\n");
-    printf("  ║         🇸🇳  TérangaOS  🇸🇳              ║\n");
+    printf("  ║         🇸🇳  TérangaOS 🇸🇳            :l   ║\n");
     printf("  ║   Distribution Linux souveraine       ║\n");
     printf("  ╚═══════════════════════════════════════╝\n");
     printf(COLOR_RESET);
