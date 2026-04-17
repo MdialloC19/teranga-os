@@ -56,6 +56,7 @@ void cmd_security(void);
 void cmd_update(void);
 void cmd_info(void);
 void cmd_help(void);
+void cmd_reboot(void);
 void print_banner(void);
 
 /* --- Prototypes utilitaires --- */
