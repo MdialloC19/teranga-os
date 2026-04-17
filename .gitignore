@@ -6,6 +6,9 @@ build/
 *.img
 *.hybrid.iso
 
+# Binaires compilés
+tools/teranga-cli/teranga
+
 # live-build (fichiers auto-générés)
 .build/
 .build_cache/

@@ -117,35 +117,38 @@ void cmd_version(void)
 void cmd_info(void)
 {
     struct utsname uts;
-    struct sysinfo si;
     char output[512];
-    
+
     print_banner();
-    
+
     /* Version TérangaOS */
     printf("  %-20s %s (%s)\n", "TérangaOS :", TERANGA_VERSION, TERANGA_CODENAME);
-    
+
     /* Kernel */
     if (uname(&uts) == 0) {
         printf("  %-20s %s\n", "Kernel :", uts.release);
         printf("  %-20s %s\n", "Architecture :", uts.machine);
         printf("  %-20s %s\n", "Hostname :", uts.nodename);
     }
-    
-    /* Mémoire RAM */
-    if (sysinfo(&si) == 0) {
-        unsigned long total_mb = si.totalram / (1024 * 1024);
-        unsigned long free_mb = si.freeram / (1024 * 1024);
-        unsigned long used_mb = total_mb - free_mb;
-        printf("  %-20s %lu Mo / %lu Mo (%lu%%)\n", "RAM :",
-               used_mb, total_mb, (used_mb * 100) / total_mb);
-        
-        /* Uptime */
-        long hours = si.uptime / 3600;
-        long mins = (si.uptime % 3600) / 60;
-        printf("  %-20s %ldh %ldm\n", "Uptime :", hours, mins);
+
+    /* Mémoire RAM + Uptime — Linux uniquement */
+#ifdef __linux__
+    {
+        struct sysinfo si;
+        if (sysinfo(&si) == 0) {
+            unsigned long total_mb = si.totalram / (1024 * 1024);
+            unsigned long free_mb  = si.freeram  / (1024 * 1024);
+            unsigned long used_mb  = total_mb - free_mb;
+            printf("  %-20s %lu Mo / %lu Mo (%lu%%)\n", "RAM :",
+                   used_mb, total_mb,
+                   total_mb > 0 ? (used_mb * 100) / total_mb : 0);
+            long hours = si.uptime / 3600;
+            long mins  = (si.uptime % 3600) / 60;
+            printf("  %-20s %ldh %ldm\n", "Uptime :", hours, mins);
+        }
     }
-    
+#endif
+
     /* Espace disque */
     struct statvfs vfs;
     if (statvfs("/", &vfs) == 0) {
