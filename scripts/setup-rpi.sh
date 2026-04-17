@@ -117,6 +117,30 @@ step_install_desktop() {
         thunar-volman
 
     log_info "Bureau Xfce installé ✓"
+
+    # --- Configurer LightDM pour utiliser Xfce (fix bug rpd-labwc) ---
+    mkdir -p /etc/lightdm
+    cat > /etc/lightdm/lightdm.conf << 'LIGHTDM'
+[Seat:*]
+greeter-session=lightdm-gtk-greeter
+user-session=xfce
+autologin-guest=false
+LIGHTDM
+
+    # Configurer le greeter GTK (apparence de l'écran de connexion)
+    mkdir -p /etc/lightdm
+    cat > /etc/lightdm/lightdm-gtk-greeter.conf << 'GREETER'
+[greeter]
+theme-name=Adwaita-dark
+icon-theme-name=Adwaita
+font-name=Sans 11
+xft-dpi=96
+indicators=~host;~spacer;~clock;~spacer;~power
+clock-format=%H:%M — %A %d %B
+background=#1a1a2e
+GREETER
+
+    log_info "LightDM configuré ✓ (greeter=gtk, session=xfce)"
 }
 
 # === ÉTAPE 3 : Suite logicielle ===
