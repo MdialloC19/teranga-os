@@ -20,7 +20,12 @@ EOF
 
 # Hostname
 echo "terangaos" > /etc/hostname
-sed -i 's/127\.0\.1\.1.*/127.0.1.1\tterangaos/' /etc/hosts
+# Remplacement compatible Linux et macOS (évite le \t dans sed)
+if grep -q "127\.0\.1\.1" /etc/hosts; then
+    sed -i "s/127\.0\.1\.1.*/127.0.1.1	terangaos/" /etc/hosts
+else
+    printf "127.0.1.1\tterangaos\n" >> /etc/hosts
+fi
 
 # MOTD
 cat > /etc/motd << 'EOF'
