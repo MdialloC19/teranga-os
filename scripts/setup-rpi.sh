@@ -127,20 +127,58 @@ user-session=xfce
 autologin-guest=false
 LIGHTDM
 
-    # Configurer le greeter GTK (apparence de l'écran de connexion)
+    # Copier les assets branding dans le système
+    local BRANDING_DIR="/usr/share/terangaos/branding"
+    mkdir -p "${BRANDING_DIR}"
+
+    # Copier le logo officiel
+    local REPO_DIR
+    REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+    if [ -f "${REPO_DIR}/branding/logo/logo.png" ]; then
+        cp "${REPO_DIR}/branding/logo/logo.png" "${BRANDING_DIR}/logo.png"
+        log_info "Logo TérangaOS copié ✓"
+    fi
+
+    # Copier le wallpaper par défaut (Dakar sunset)
+    if [ -f "${REPO_DIR}/branding/wallpapers/dakar-sunset.png" ]; then
+        cp "${REPO_DIR}/branding/wallpapers/dakar-sunset.png" \
+           "${BRANDING_DIR}/wallpaper-default.png"
+        # Aussi dans le dossier partagé
+        mkdir -p /usr/share/backgrounds/terangaos
+        cp "${REPO_DIR}/branding/wallpapers/"*.png \
+           /usr/share/backgrounds/terangaos/ 2>/dev/null || true
+        log_info "Wallpapers TérangaOS copiés ✓"
+    fi
+
+    # Configurer le greeter GTK (écran de connexion brandé)
     mkdir -p /etc/lightdm
     cat > /etc/lightdm/lightdm-gtk-greeter.conf << 'GREETER'
 [greeter]
-theme-name=Adwaita-dark
-icon-theme-name=Adwaita
-font-name=Sans 11
+# Thème TérangaOS
+theme-name=Fluent-Dark
+icon-theme-name=Fluent
+font-name=Inter 11
 xft-dpi=96
+
+# Logo et fond d'écran TérangaOS
+logo=/usr/share/terangaos/branding/logo.png
+background=/usr/share/terangaos/branding/wallpaper-default.png
+
+# Barre supérieure
 indicators=~host;~spacer;~clock;~spacer;~power
-clock-format=%H:%M — %A %d %B
-background=#1a1a2e
+clock-format=%H:%M  —  %A %d %B
+
+# Apparence
+position=50%,center 50%,center
+hide-user-image=false
+screensaver-timeout=60
 GREETER
 
-    log_info "LightDM configuré ✓ (greeter=gtk, session=xfce)"
+    log_info "LightDM configuré ✓"
+    log_info "  - Logo      : TérangaOS (lion shield)"
+    log_info "  - Fond      : Dakar Sunset"
+    log_info "  - Thème     : Fluent-Dark"
+    log_info "  - Horloge   : format FR"
 }
 
 # === ÉTAPE 3 : Suite logicielle ===
