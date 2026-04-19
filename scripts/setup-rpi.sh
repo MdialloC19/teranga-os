@@ -197,8 +197,64 @@ step_install_apps() {
 
 # === ÉTAPE 4 : Thème Windows-like ===
 step_configure_theme() {
-    log_step "ÉTAPE 4/8 — Configuration du thème (style Windows)"
-    
+    log_step "ÉTAPE 4/8 — Configuration du thème (style Windows 11)"
+
+    # Prérequis pour télécharger les thèmes
+    apt install -y git curl unzip
+
+    # ----------------------------------------------------------------
+    # 4.1 — Thème GTK : Fluent (look Windows 11)
+    # ----------------------------------------------------------------
+    log_info "Installation du thème GTK Fluent..."
+    if [ -d /tmp/Fluent-gtk-theme ]; then
+        rm -rf /tmp/Fluent-gtk-theme
+    fi
+    git clone --depth=1 https://github.com/vinceliuice/Fluent-gtk-theme.git /tmp/Fluent-gtk-theme
+    cd /tmp/Fluent-gtk-theme
+    # Installer en mode sombre avec accent vert (couleurs TérangaOS)
+    bash install.sh --theme green --color dark --size standard --dest /usr/share/themes
+    cd /
+    rm -rf /tmp/Fluent-gtk-theme
+    log_info "Thème Fluent GTK installé ✓"
+
+    # ----------------------------------------------------------------
+    # 4.2 — Icônes : Fluent Icon Theme (look Windows 11)
+    # ----------------------------------------------------------------
+    log_info "Installation des icônes Fluent..."
+    if [ -d /tmp/Fluent-icon-theme ]; then
+        rm -rf /tmp/Fluent-icon-theme
+    fi
+    git clone --depth=1 https://github.com/vinceliuice/Fluent-icon-theme.git /tmp/Fluent-icon-theme
+    cd /tmp/Fluent-icon-theme
+    bash install.sh --dest /usr/share/icons
+    cd /
+    rm -rf /tmp/Fluent-icon-theme
+    log_info "Icônes Fluent installées ✓"
+
+    # ----------------------------------------------------------------
+    # 4.3 — Police : Inter (moderne, lisible, proche de Segoe UI)
+    # ----------------------------------------------------------------
+    log_info "Installation de la police Inter..."
+    apt install -y fonts-inter 2>/dev/null || {
+        # Téléchargement manuel si pas dans les repos
+        mkdir -p /usr/share/fonts/truetype/inter
+        curl -sL "https://github.com/rsms/inter/releases/download/v4.0/Inter-4.0.zip" \
+            -o /tmp/inter.zip 2>/dev/null && \
+        unzip -q /tmp/inter.zip -d /tmp/inter 2>/dev/null && \
+        find /tmp/inter -name "*.ttf" -exec cp {} /usr/share/fonts/truetype/inter/ \; 2>/dev/null && \
+        fc-cache -f 2>/dev/null && \
+        rm -rf /tmp/inter /tmp/inter.zip && \
+        log_info "Police Inter installée ✓" || \
+        log_warn "Police Inter non installée, Cantarell utilisée"
+    }
+
+    # ----------------------------------------------------------------
+    # 4.4 — Curseur : Bibata White (curseur moderne)
+    # ----------------------------------------------------------------
+    log_info "Installation du curseur Bibata..."
+    apt install -y bibata-cursor-theme 2>/dev/null || \
+        log_warn "Curseur Bibata non disponible, curseur par défaut utilisé"
+
     # Créer le profil utilisateur par défaut
     local SKEL="/etc/skel"
     mkdir -p "${SKEL}/.config/xfce4/xfconf/xfce-perchannel-xml"
@@ -337,10 +393,60 @@ LIBREOFFICE
 }
 FIREFOX
 
-    log_info "Thème Windows-like configuré ✓"
+    # ----------------------------------------------------------------
+    # 4.5 — Appliquer le thème Fluent via xfsettings
+    # ----------------------------------------------------------------
+    cat > "${SKEL}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" << 'XSETTINGS'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xsettings" version="1.0">
+  <property name="Net" type="empty">
+    <property name="ThemeName" type="string" value="Fluent-Dark"/>
+    <property name="IconThemeName" type="string" value="Fluent"/>
+    <property name="CursorThemeName" type="string" value="Bibata-Modern-Classic"/>
+    <property name="CursorThemeSize" type="int" value="24"/>
+  </property>
+  <property name="Gtk" type="empty">
+    <property name="FontName" type="string" value="Inter 11"/>
+    <property name="MonospaceFontName" type="string" value="Monospace 10"/>
+    <property name="CursorThemeName" type="string" value="Bibata-Modern-Classic"/>
+    <property name="DecorationLayout" type="string" value="menu:minimize,maximize,close"/>
+    <property name="ButtonImages" type="bool" value="false"/>
+    <property name="MenuImages" type="bool" value="false"/>
+    <property name="ColorScheme" type="string" value=""/>
+  </property>
+  <property name="Xft" type="empty">
+    <property name="DPI" type="int" value="96"/>
+    <property name="Antialias" type="int" value="1"/>
+    <property name="Hinting" type="int" value="1"/>
+    <property name="HintStyle" type="string" value="hintslight"/>
+    <property name="RGBA" type="string" value="rgb"/>
+  </property>
+</channel>
+XSETTINGS
+
+    # Thème du gestionnaire de fenêtres
+    cat > "${SKEL}/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml" << 'XFWM'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfwm4" version="1.0">
+  <property name="general" type="empty">
+    <property name="theme" type="string" value="Fluent-Dark"/>
+    <property name="title_font" type="string" value="Inter Bold 10"/>
+    <property name="button_layout" type="string" value="|HMC"/>
+    <property name="title_alignment" type="string" value="left"/>
+    <property name="snap_to_border" type="bool" value="true"/>
+    <property name="snap_to_windows" type="bool" value="true"/>
+    <property name="tile_on_move" type="bool" value="true"/>
+    <property name="wrap_windows" type="bool" value="false"/>
+  </property>
+</channel>
+XFWM
+
+    log_info "Thème Windows 11 configuré ✓"
+    log_info "  - Thème GTK  : Fluent-Dark (vert TérangaOS)"
+    log_info "  - Icônes     : Fluent"
+    log_info "  - Police     : Inter 11"
+    log_info "  - Curseur    : Bibata Modern"
     log_info "  - Barre des tâches en bas"
-    log_info "  - Menu Whisker (style Windows)"
-    log_info "  - Double-clic pour ouvrir"
     log_info "  - Boutons fenêtre à droite (réduire, agrandir, fermer)"
     log_info "  - LibreOffice en mode Ruban"
     log_info "  - Firefox avec DuckDuckGo"
