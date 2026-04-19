@@ -93,6 +93,25 @@ jobs:
           shellcheck scripts/check-deps.sh || true
           echo "✓ Analyse scripts terminée"
 
+      - name: 🔍 Analyser les mods
+        run: |
+          echo "Analyse syntaxe de tous les mods..."
+          for f in src/mods/*/install.sh; do
+            shellcheck "$f" || true
+          done
+          shellcheck src/lib/common.sh || true
+          echo "✓ Analyse mods terminée"
+
+      - name: ✅ Test syntaxe bash (bash -n)
+        run: |
+          echo "Test syntaxe bash..."
+          bash -n src/lib/common.sh && echo "✓ common.sh"
+          for f in src/mods/*/install.sh; do
+            bash -n "$f" && echo "✓ $f" || (echo "✗ ERREUR: $f" && exit 1)
+          done
+          bash -n scripts/setup-rpi.sh && echo "✓ setup-rpi.sh"
+          echo "✅ Syntaxe OK — tous les mods sont valides"
+
   # ============================================================
   # Job 4 : Vérification structure du projet
   # ============================================================
@@ -128,6 +147,20 @@ jobs:
           test -f config/package-lists/base.list.chroot    && echo "✓ base.list.chroot"    || (echo "✗ base manquant"    && exit 1)
           test -f config/package-lists/desktop.list.chroot && echo "✓ desktop.list.chroot" || (echo "✗ desktop manquant" && exit 1)
           test -f config/package-lists/rpi.list.chroot     && echo "✓ rpi.list.chroot"     || (echo "✗ rpi manquant"     && exit 1)
+
+          # Mods modulaires
+          test -f src/lib/common.sh && echo "✓ src/lib/common.sh" || (echo "✗ common.sh manquant" && exit 1)
+          for i in 00 01 02 03 04 05 06 07 08 09 10 11; do
+            mod_found=false
+            for d in src/mods/${i}-*; do
+              [ -f "${d}/install.sh" ] && mod_found=true && echo "✓ ${d}/install.sh"
+            done
+            [ "$mod_found" = false ] && echo "✗ Mod ${i} manquant" && exit 1
+          done
+
+          # Branding
+          test -f branding/logo/logo.png          && echo "✓ logo.png"          || echo "⚠ logo.png manquant (non bloquant)"
+          test -d branding/wallpapers             && echo "✓ wallpapers/"        || echo "⚠ wallpapers/ manquant"
 
           echo ""
           echo "✅ Toutes les vérifications OK"
