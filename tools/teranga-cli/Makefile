@@ -9,13 +9,22 @@ TARGET  := teranga
 SRC     := src/main.c
 PREFIX  := /usr/local
 
-.PHONY: all clean install uninstall deb
+# Cross-compilation ARM64 (Raspberry Pi 5)
+CC_ARM64  := aarch64-linux-gnu-gcc
+TARGET_ARM64 := teranga-arm64
+
+.PHONY: all arm64 clean install uninstall deb
 
 all: $(TARGET)
 
 $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
-	@echo "✓ Compilé : $(TARGET)"
+	@echo "✓ Compilé : $(TARGET) (x86_64)"
+
+# Cross-compiler pour RPi 5
+arm64: $(SRC)
+	$(CC_ARM64) $(CFLAGS) -o $(TARGET_ARM64) $^ $(LDFLAGS)
+	@echo "✓ Compilé : $(TARGET_ARM64) (ARM64/RPi)"
 
 install: $(TARGET)
 	install -Dm755 $(TARGET) $(DESTDIR)$(PREFIX)/bin/$(TARGET)
@@ -30,5 +39,5 @@ deb: $(TARGET)
 	@bash ../../scripts/build-deb-cli.sh
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(TARGET_ARM64)
 	@echo "✓ Nettoyé"
