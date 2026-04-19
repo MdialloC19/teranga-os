@@ -1,0 +1,133 @@
+name: 🔨 Build & Test teranga-cli
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ============================================================
+  # Job 1 : Compiler teranga-cli sur Linux (x86_64)
+  # ============================================================
+  build-linux-x86:
+    name: Build Linux x86_64
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Cloner le dépôt
+        uses: actions/checkout@v4
+
+      - name: 🔧 Installer les dépendances
+        run: sudo apt-get install -y gcc make
+
+      - name: 🔨 Compiler teranga-cli
+        run: |
+          cd tools/teranga-cli
+          make
+          echo "✓ Compilation réussie"
+
+      - name: 🧪 Tester les commandes de base
+        run: |
+          cd tools/teranga-cli
+          ./teranga version
+          ./teranga help
+          echo "✓ Tests de base OK"
+
+      - name: 📦 Sauvegarder le binaire
+        uses: actions/upload-artifact@v4
+        with:
+          name: teranga-linux-x86_64
+          path: tools/teranga-cli/teranga
+          retention-days: 7
+
+  # ============================================================
+  # Job 2 : Compiler teranga-cli sur ARM64 (simulation RPi)
+  # ============================================================
+  build-linux-arm64:
+    name: Build Linux ARM64 (RPi)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Cloner le dépôt
+        uses: actions/checkout@v4
+
+      - name: 🔧 Installer la toolchain ARM64
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu make
+
+      - name: 🔨 Cross-compiler pour ARM64
+        run: |
+          cd tools/teranga-cli
+          # Cross-compilation pour Raspberry Pi 5 (aarch64)
+          CC=aarch64-linux-gnu-gcc make
+          echo "✓ Cross-compilation ARM64 réussie"
+          file teranga
+
+      - name: 📦 Sauvegarder le binaire ARM64
+        uses: actions/upload-artifact@v4
+        with:
+          name: teranga-linux-arm64
+          path: tools/teranga-cli/teranga
+          retention-days: 7
+
+  # ============================================================
+  # Job 3 : Vérifications scripts shell
+  # ============================================================
+  lint-scripts:
+    name: Vérification scripts Shell
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Cloner le dépôt
+        uses: actions/checkout@v4
+
+      - name: 🔧 Installer shellcheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: 🔍 Analyser les scripts
+        run: |
+          shellcheck scripts/setup-rpi.sh || true
+          shellcheck scripts/build.sh || true
+          shellcheck scripts/check-deps.sh || true
+          echo "✓ Analyse scripts terminée"
+
+  # ============================================================
+  # Job 4 : Vérification structure du projet
+  # ============================================================
+  check-structure:
+    name: Vérification structure projet
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Cloner le dépôt
+        uses: actions/checkout@v4
+
+      - name: 🔍 Vérifier les fichiers obligatoires
+        run: |
+          echo "Vérification de la structure TérangaOS..."
+
+          # Fichiers open source obligatoires
+          test -f README.md       && echo "✓ README.md"       || (echo "✗ README.md manquant"       && exit 1)
+          test -f LICENSE         && echo "✓ LICENSE"         || (echo "✗ LICENSE manquant"         && exit 1)
+          test -f CONTRIBUTING.md && echo "✓ CONTRIBUTING.md" || (echo "✗ CONTRIBUTING.md manquant" && exit 1)
+          test -f SECURITY.md     && echo "✓ SECURITY.md"     || (echo "✗ SECURITY.md manquant"     && exit 1)
+
+          # Scripts
+          test -f scripts/setup-rpi.sh    && echo "✓ setup-rpi.sh"    || (echo "✗ setup-rpi.sh manquant"    && exit 1)
+          test -f scripts/build.sh        && echo "✓ build.sh"        || (echo "✗ build.sh manquant"        && exit 1)
+          test -f scripts/check-deps.sh   && echo "✓ check-deps.sh"   || (echo "✗ check-deps.sh manquant"   && exit 1)
+
+          # teranga-cli
+          test -f tools/teranga-cli/src/main.c  && echo "✓ main.c"  || (echo "✗ main.c manquant"  && exit 1)
+          test -f tools/teranga-cli/inc/cli.h   && echo "✓ cli.h"   || (echo "✗ cli.h manquant"   && exit 1)
+          test -f tools/teranga-cli/Makefile    && echo "✓ Makefile" || (echo "✗ Makefile manquant" && exit 1)
+
+          # Paquets
+          test -f config/package-lists/base.list.chroot    && echo "✓ base.list.chroot"    || (echo "✗ base manquant"    && exit 1)
+          test -f config/package-lists/desktop.list.chroot && echo "✓ desktop.list.chroot" || (echo "✗ desktop manquant" && exit 1)
+          test -f config/package-lists/rpi.list.chroot     && echo "✓ rpi.list.chroot"     || (echo "✗ rpi manquant"     && exit 1)
+
+          echo ""
+          echo "✅ Toutes les vérifications OK"
