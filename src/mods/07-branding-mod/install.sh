@@ -1,16 +1,17 @@
 #!/bin/bash
 # MOD 07 — Branding TérangaOS (hostname, os-release, MOTD)
 source "$(dirname "$0")/../../lib/common.sh"
+source "$(dirname "$0")/../../lib/args.sh"
 mod_name="07-branding"
 log_step "[${mod_name}] Application du branding TérangaOS"
 
 # OS release
-cat > /etc/os-release << 'EOF'
-PRETTY_NAME="TérangaOS 0.1 (Diamniadio) — Raspberry Pi Edition"
+cat > /etc/os-release << EOF
+PRETTY_NAME="${TERANGA_NAME} (${TERANGA_CODENAME})"
 NAME="TérangaOS"
-VERSION_ID="0.1"
-VERSION="0.1 (Diamniadio)"
-VERSION_CODENAME=diamniadio
+VERSION_ID="${TERANGA_VERSION}"
+VERSION="${TERANGA_VERSION} (${TERANGA_CODENAME})"
+VERSION_CODENAME=${TERANGA_CODENAME,,}
 ID=terangaos
 ID_LIKE=debian
 HOME_URL="https://teranga-os.org"
@@ -19,12 +20,12 @@ BUG_REPORT_URL="https://github.com/mdialloc19/teranga-os/issues"
 EOF
 
 # Hostname
-echo "terangaos" > /etc/hostname
-# Remplacement compatible Linux et macOS (évite le \t dans sed)
+echo "${TERANGA_HOSTNAME}" > /etc/hostname
+# Remplacement compatible Linux et macOS
 if grep -q "127\.0\.1\.1" /etc/hosts; then
-    sed -i "s/127\.0\.1\.1.*/127.0.1.1	terangaos/" /etc/hosts
+    sed -i "s/127\.0\.1\.1.*/127.0.1.1	${TERANGA_HOSTNAME}/" /etc/hosts
 else
-    printf "127.0.1.1\tterangaos\n" >> /etc/hosts
+    printf "127.0.1.1\t%s\n" "${TERANGA_HOSTNAME}" >> /etc/hosts
 fi
 
 # MOTD
