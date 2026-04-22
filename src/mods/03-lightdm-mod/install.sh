@@ -1,6 +1,7 @@
 #!/bin/bash
 # MOD 03 — Configuration LightDM + branding écran de connexion
 source "$(dirname "$0")/../../lib/common.sh"
+source "$(dirname "$0")/../../lib/args.sh"
 mod_name="03-lightdm"
 log_step "[${mod_name}] Configuration LightDM"
 
@@ -32,9 +33,9 @@ EOF
 
 cat > /etc/lightdm/lightdm-gtk-greeter.conf << 'EOF'
 [greeter]
-theme-name=Fluent-Dark
-icon-theme-name=Fluent
-font-name=Inter 11
+theme-name=${TERANGA_THEME}
+icon-theme-name=${TERANGA_ICONS}
+font-name=${TERANGA_FONT}
 xft-dpi=96
 logo=/usr/share/terangaos/branding/logo.png
 background=/usr/share/terangaos/branding/wallpaper-default.png
