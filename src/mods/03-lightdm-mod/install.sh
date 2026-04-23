@@ -1,18 +1,18 @@
 #!/bin/bash
-# MOD 03 — Configuration LightDM + branding écran de connexion
+# MOD 03 — LightDM configuration + login screen branding
 source "$(dirname "$0")/../../lib/common.sh"
 source "$(dirname "$0")/../../lib/args.sh"
 mod_name="03-lightdm"
-log_step "[${mod_name}] Configuration LightDM"
+log_step "[${mod_name}] LightDM configuration"
 
-# Copier les assets branding
+# Copy branding assets
 BRANDING_DIR="/usr/share/terangaos/branding"
 BRANDING_SOURCE="${REPO_ROOT}/assets/branding"
 mkdir -p "$BRANDING_DIR"
 
 [ -f "${BRANDING_SOURCE}/logo/logo.png" ] && \
     cp "${BRANDING_SOURCE}/logo/logo.png" "${BRANDING_DIR}/logo.png" && \
-    log_info "Logo copié ✓"
+    log_info "Logo copied ✓"
 
 if [ -f "${BRANDING_SOURCE}/wallpapers/dakar-sunset.png" ]; then
     cp "${BRANDING_SOURCE}/wallpapers/dakar-sunset.png" \
@@ -20,10 +20,10 @@ if [ -f "${BRANDING_SOURCE}/wallpapers/dakar-sunset.png" ]; then
     mkdir -p /usr/share/backgrounds/terangaos
     cp "${BRANDING_SOURCE}/wallpapers/"*.png \
        /usr/share/backgrounds/terangaos/ 2>/dev/null || true
-    log_info "Wallpapers copiés ✓"
+    log_info "Wallpapers copied ✓"
 fi
 
-# Config LightDM
+# LightDM configuration
 mkdir -p /etc/lightdm
 cat > /etc/lightdm/lightdm.conf << 'EOF'
 [Seat:*]
@@ -46,4 +46,4 @@ position=50%,center 50%,center
 EOF
 
 systemctl set-default graphical.target
-log_info "[${mod_name}] ✓ LightDM configuré (logo + Dakar Sunset)"
+log_info "[${mod_name}] ✓ LightDM configured (logo + Dakar Sunset)"

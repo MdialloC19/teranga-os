@@ -1,8 +1,8 @@
 #!/bin/bash
-# MOD 01 — Mise à jour APT
+# MOD 01 — APT system update
 source "$(dirname "$0")/../../lib/common.sh"
 mod_name="01-apt-update"
-log_step "[${mod_name}] Mise à jour du système"
+log_step "[${mod_name}] System update"
 apt-get update -qq
 apt-get full-upgrade -y
-log_info "[${mod_name}] ✓ Système à jour"
+log_info "[${mod_name}] ✓ System up to date"

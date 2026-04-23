@@ -1,10 +1,10 @@
 #!/bin/bash
-# MOD 04 — Suite logicielle (LibreOffice, Firefox, Thunderbird...)
+# MOD 04 — Office suite (LibreOffice, Firefox, Thunderbird...)
 source "$(dirname "$0")/../../lib/common.sh"
 mod_name="04-apps"
-log_step "[${mod_name}] Installation de la suite logicielle"
+log_step "[${mod_name}] Office suite installation"
 
-# Bureautique
+# Productivity
 apt-get install -y \
     libreoffice-writer libreoffice-calc libreoffice-impress \
     libreoffice-l10n-fr libreoffice-help-fr libreoffice-gtk3
@@ -15,13 +15,13 @@ apt-get install -y firefox-esr firefox-esr-l10n-fr
 # Email
 apt-get install -y thunderbird thunderbird-l10n-fr
 
-# Multimédia et utilitaires
+# Multimedia and utilities
 apt-get install -y \
     vlc mousepad atril galculator file-roller \
     ristretto gnome-disk-utility baobab gparted \
     keepassxc flameshot
 
-# Polices
+# Fonts
 apt-get install -y \
     fonts-noto fonts-noto-color-emoji \
     fonts-liberation fonts-dejavu
@@ -44,7 +44,7 @@ cat > /usr/lib/firefox-esr/distribution/policies.json << 'EOF'
 }
 EOF
 
-# LibreOffice : mode Ruban
+# LibreOffice: Ribbon mode
 SKEL_LO="/etc/skel/.config/libreoffice/4/user"
 mkdir -p "$SKEL_LO"
 cat > "${SKEL_LO}/registrymodifications.xcu" << 'EOF'
@@ -59,4 +59,4 @@ cat > "${SKEL_LO}/registrymodifications.xcu" << 'EOF'
 </oor:items>
 EOF
 
-log_info "[${mod_name}] ✓ Suite logicielle installée"
+log_info "[${mod_name}] ✓ Office suite installed"
