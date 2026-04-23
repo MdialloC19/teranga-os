@@ -1,34 +1,31 @@
 ---
-name: 🐛 Rapport de bug
-about: Signaler un bug dans TérangaOS
+name: 🐛 Bug Report
+about: Report a bug in TérangaOS
 title: '[BUG] '
 labels: bug
 assignees: ''
 ---
 
-## Description du bug
-Une description claire et concise du bug.
+## Description
+Clear, concise description of the bug.
 
-## Étapes pour reproduire
-1. Aller sur '...'
-2. Cliquer sur '...'
-3. Faire défiler jusqu'à '...'
-4. Voir l'erreur
+## Steps to Reproduce
+1. ...
+2. ...
+3. See error
 
-## Comportement attendu
-Ce que vous vous attendiez à voir.
+## Expected Behavior
+What should happen.
 
-## Captures d'écran
-Si applicable, ajoutez des captures d'écran.
+## Screenshots
+If applicable.
 
-## Environnement
-- **Édition TérangaOS** : [Desktop / Léger / Server]
-- **Version** : [ex: 0.1.0-alpha]
-- **Matériel** :
-  - CPU : 
-  - RAM : 
-  - GPU : 
-- **Installation** : [Live USB / Installé sur disque / VM]
+## Test Case
+- **Edition**: [Desktop / Léger / RPi]
+- **Version**: [e.g., 0.1.0-alpha]
+- **Hardware**: [e.g., Raspberry Pi 5 ARM64 / x86_64 PC]
+- **Installation**: [Live USB / Installed / VM]
+- **Steps tested**: List the exact steps you performed
 
-## Informations supplémentaires
-Tout autre contexte pertinent.
+## Additional Context
+Any relevant details, logs, or error messages.
