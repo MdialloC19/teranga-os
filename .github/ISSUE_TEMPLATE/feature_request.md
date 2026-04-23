@@ -1,19 +1,25 @@
 ---
-name: 💡 Demande de fonctionnalité
-about: Proposer une nouvelle fonctionnalité pour TérangaOS
+name: 💡 Feature Request
+about: Propose a new feature for TérangaOS
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''
 ---
 
-## Problème
-Décrivez le problème que cette fonctionnalité résoudrait.
+## Problem
+What problem does this solve?
 
-## Solution proposée
-Décrivez clairement la solution que vous aimeriez voir.
+## Proposed Solution
+Describe the desired solution.
 
-## Alternatives considérées
-Décrivez les alternatives que vous avez envisagées.
+## Alternatives Considered
+Other approaches you considered.
 
-## Contexte supplémentaire
-Tout autre contexte, captures d'écran, ou maquettes.
+## Test Case
+How would you test this feature?
+- **Edition(s)**: [Desktop / Léger / RPi]
+- **Step-by-step test**: ...
+- **Expected result**: ...
+
+## Additional Context
+Screens, diagrams, mockups, or references.
