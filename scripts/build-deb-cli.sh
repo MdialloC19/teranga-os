@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# TérangaOS — Builder le paquet .deb pour teranga-cli
+# TérangaOS — Build the .deb package for teranga-cli
 # ============================================================
 
 set -euo pipefail
@@ -11,22 +11,22 @@ ARCH=$(dpkg --print-architecture 2>/dev/null || echo "arm64")
 PKG_NAME="teranga-cli"
 PKG_DIR="/tmp/${PKG_NAME}_${VERSION}_${ARCH}"
 
-echo "[TérangaOS] Construction du paquet ${PKG_NAME}_${VERSION}_${ARCH}.deb..."
+echo "[TérangaOS] Building package ${PKG_NAME}_${VERSION}_${ARCH}.deb..."
 
-# Compiler le binaire
+# Compile the binary
 cd "${TOOL_DIR}"
 make clean && make
 
-# Créer la structure du paquet
+# Create the package structure
 mkdir -p "${PKG_DIR}/DEBIAN"
 mkdir -p "${PKG_DIR}/usr/bin"
 mkdir -p "${PKG_DIR}/usr/share/doc/${PKG_NAME}"
 mkdir -p "${PKG_DIR}/usr/share/man/man1"
 
-# Copier le binaire
+# Copy the binary
 install -m 755 "${TOOL_DIR}/teranga" "${PKG_DIR}/usr/bin/teranga"
 
-# Fichier de contrôle Debian
+# Debian control file
 cat > "${PKG_DIR}/DEBIAN/control" << CONTROL
 Package: ${PKG_NAME}
 Version: ${VERSION}
@@ -37,10 +37,10 @@ Recommends: fail2ban
 Section: admin
 Priority: optional
 Homepage: https://teranga-os.org
-Description: Outil de gestion système TérangaOS
- teranga-cli est l'outil en ligne de commande officiel de TérangaOS.
- Il permet de vérifier l'état du système, auditer la sécurité,
- lancer des mises à jour et afficher les informations système.
+Description: TérangaOS system management tool
+ teranga-cli is the official command-line tool for TérangaOS.
+ It allows checking system status, auditing security,
+ running updates and displaying system information.
 CONTROL
 
 # Documentation
@@ -51,11 +51,11 @@ Licence: GNU General Public License v3.0
 https://github.com/MdialloC19/teranga-os
 COPYRIGHT
 
-# Construire le .deb
+# Build the .deb
 dpkg-deb --build "${PKG_DIR}" "build/output/${PKG_NAME}_${VERSION}_${ARCH}.deb"
 
-echo "[TérangaOS] ✓ Paquet créé : build/output/${PKG_NAME}_${VERSION}_${ARCH}.deb"
-echo "[TérangaOS] Pour installer : sudo dpkg -i build/output/${PKG_NAME}_${VERSION}_${ARCH}.deb"
+echo "[TérangaOS] ✓ Package created: build/output/${PKG_NAME}_${VERSION}_${ARCH}.deb"
+echo "[TérangaOS] To install: sudo dpkg -i build/output/${PKG_NAME}_${VERSION}_${ARCH}.deb"
 
-# Nettoyage
+# Cleanup
 rm -rf "${PKG_DIR}"

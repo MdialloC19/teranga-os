@@ -1,19 +1,19 @@
 #!/bin/bash
 # ============================================================
-# TérangaOS — Hook de configuration KDE Plasma
-# Configure le bureau pour ressembler à Windows 11
+# TérangaOS — KDE Plasma configuration hook
+# Configures desktop to resemble Windows 11
 # ============================================================
 
 set -e
 
-echo "[TérangaOS] Configuration de KDE Plasma (thème Windows-like)..."
+echo "[TérangaOS] Configuring KDE Plasma (Windows-like theme)..."
 
-# --- 1. Créer le profil KDE par défaut ---
+# --- 1. Create default KDE profile ---
 SKEL_KDE="/etc/skel/.config"
 mkdir -p "${SKEL_KDE}/plasma-org.kde.plasma.desktop-appletsrc.d"
 mkdir -p "${SKEL_KDE}/kdeglobals.d"
 
-# --- 2. Configuration du panneau (barre des tâches centrée) ---
+# --- 2. Panel configuration (centered taskbar) ---
 cat > "${SKEL_KDE}/plasma-org.kde.plasma.desktop-appletsrc" << 'PLASMA'
 [ActionPlugins][0]
 RightButton;NoModifier=org.kde.contextmenu
@@ -59,7 +59,7 @@ plugin=org.kde.plasma.showdesktop
 AppletOrder=3;4;5;6;7
 PLASMA
 
-# --- 3. Configuration globale KDE ---
+# --- 3. Global KDE configuration ---
 cat > "${SKEL_KDE}/kdeglobals" << 'KDEGLOBALS'
 [General]
 ColorScheme=BreezeDark
@@ -79,7 +79,7 @@ AnimationDurationFactor=0.5
 Theme=breeze-dark
 KDEGLOBALS
 
-# --- 4. Dolphin — Gestionnaire de fichiers ---
+# --- 4. Dolphin — File manager ---
 mkdir -p "${SKEL_KDE}"
 cat > "${SKEL_KDE}/dolphinrc" << 'DOLPHIN'
 [General]
@@ -101,7 +101,7 @@ PreviewSize=22
 PreviewSize=80
 DOLPHIN
 
-# --- 5. LibreOffice — Interface Ruban (Tabbed) ---
+# --- 5. LibreOffice — Tabbed interface (Ribbon UI) ---
 mkdir -p /etc/skel/.config/libreoffice/4/user/registrymodifications.d
 cat > "/etc/skel/.config/libreoffice/4/user/registrymodifications.xcu" << 'LIBREOFFICE'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -126,7 +126,7 @@ cat > "/etc/skel/.config/libreoffice/4/user/registrymodifications.xcu" << 'LIBRE
 </oor:items>
 LIBREOFFICE
 
-# --- 6. Firefox — Configuration par défaut ---
+# --- 6. Firefox — Default configuration ---
 mkdir -p /usr/lib/firefox-esr/distribution
 cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
 {
@@ -158,12 +158,12 @@ cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
 }
 FIREFOX
 
-# --- 7. Double-clic pour ouvrir (pas simple clic) ---
-# Déjà configuré dans kdeglobals avec SingleClick=false
+# --- 7. Double-click to open (not single-click) ---
+# Already configured in kdeglobals with SingleClick=false
 
-echo "[TérangaOS] Configuration KDE Plasma terminée ✓"
-echo "[TérangaOS] - Panneau en bas (style Windows)"
-echo "[TérangaOS] - Double-clic pour ouvrir"
-echo "[TérangaOS] - LibreOffice en mode Ruban (Tabbed)"
-echo "[TérangaOS] - Firefox avec DuckDuckGo + anti-tracking"
-echo "[TérangaOS] - Dolphin configuré comme l'Explorateur Windows"
+echo "[TérangaOS] KDE Plasma configuration complete ✓"
+echo "[TérangaOS] - Bottom panel (Windows-style)"
+echo "[TérangaOS] - Double-click to open"
+echo "[TérangaOS] - LibreOffice in Tabbed mode"
+echo "[TérangaOS] - Firefox with DuckDuckGo + anti-tracking"
+echo "[TérangaOS] - Dolphin configured like Windows Explorer"

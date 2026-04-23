@@ -1,7 +1,7 @@
 # ============================================================
-# TérangaOS Léger — Paquets Xfce
-# Pour vieux matériel et zones à faible connectivité
-# RAM minimum : 512 Mo
+# TérangaOS Lightweight — Xfce packages
+# For older hardware and low connectivity areas
+# Minimum RAM: 512 MB
 # ============================================================
 
 # --- Xfce Desktop ---
@@ -16,7 +16,7 @@ xfce4-taskmanager
 lightdm
 lightdm-gtk-greeter
 
-# --- Applications légères ---
+# --- Lightweight applications ---
 thunar
 thunar-archive-plugin
 thunar-volman
@@ -27,13 +27,13 @@ galculator
 xfce4-clipman-plugin
 xfce4-whiskermenu-plugin
 
-# --- Suite bureautique ---
+# --- Office suite ---
 libreoffice
 libreoffice-gtk3
 libreoffice-l10n-fr
 libreoffice-help-fr
 
-# --- Navigateur ---
+# --- Browser ---
 firefox-esr
 firefox-esr-l10n-fr
 
@@ -41,11 +41,11 @@ firefox-esr-l10n-fr
 thunderbird
 thunderbird-l10n-fr
 
-# --- Multimédia (léger) ---
+# --- Lightweight multimedia ---
 parole
 celluloid
 
-# --- Polices ---
+# --- Fonts ---
 fonts-noto
 fonts-liberation
 fonts-dejavu

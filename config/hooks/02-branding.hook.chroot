@@ -1,14 +1,14 @@
 #!/bin/bash
 # ============================================================
-# TérangaOS — Hook de branding
-# Applique l'identité visuelle TérangaOS
+# TérangaOS — Branding hook
+# Applies TérangaOS visual identity
 # ============================================================
 
 set -e
 
-echo "[TérangaOS] Application du branding..."
+echo "[TérangaOS] Applying branding..."
 
-# --- 1. Informations système ---
+# --- 1. System information ---
 cat > /etc/os-release << 'OSRELEASE'
 PRETTY_NAME="TérangaOS 0.1 (Dakar)"
 NAME="TérangaOS"
@@ -23,25 +23,25 @@ BUG_REPORT_URL="https://github.com/mdialloc19/teranga-os/issues"
 PRIVACY_POLICY_URL="https://teranga-os.org/privacy"
 OSRELEASE
 
-# --- 2. Message de bienvenue terminal ---
+# --- 2. Terminal welcome message ---
 cat > /etc/update-motd.d/10-terangaos << 'MOTD'
 #!/bin/bash
 echo ""
-echo "  🇸🇳 Bienvenue sur TérangaOS"
-echo "  Distribution Linux souveraine pour le Sénégal"
+echo "  🇸🇳 Welcome to TérangaOS"
+echo "  Sovereign Linux Distribution for Senegal"
 echo ""
 echo "  Version  : $(cat /etc/os-release | grep VERSION= | cut -d'"' -f2)"
 echo "  Kernel   : $(uname -r)"
 echo "  Hostname : $(hostname)"
 echo ""
-echo "  📖 Documentation : https://teranga-os.org/docs"
-echo "  🐛 Signaler un bug : https://github.com/mdialloc19/teranga-os/issues"
+echo "  📖 Documentation: https://teranga-os.org/docs"
+echo "  🐛 Report a bug: https://github.com/mdialloc19/teranga-os/issues"
 echo ""
 MOTD
 chmod +x /etc/update-motd.d/10-terangaos
 
-# --- 3. Créer les dossiers de branding ---
+# --- 3. Create branding folders ---
 mkdir -p /usr/share/terangaos/wallpapers
 mkdir -p /usr/share/terangaos/branding
 
-echo "[TérangaOS] Branding appliqué ✓"
+echo "[TérangaOS] Branding applied ✓"

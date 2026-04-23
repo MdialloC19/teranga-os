@@ -1,6 +1,6 @@
 # ============================================================
-# TérangaOS Desktop — Paquets KDE Plasma 6
-# Interface Windows-like pour les postes standards
+# TérangaOS Desktop — KDE Plasma 6 packages
+# Windows-like interface for standard workstations
 # ============================================================
 
 # --- KDE Plasma Desktop ---
@@ -10,7 +10,7 @@ plasma-workspace
 sddm
 sddm-theme-breeze
 
-# --- KDE Applications essentielles ---
+# --- Essential KDE Applications ---
 dolphin
 dolphin-plugins
 konsole
@@ -32,7 +32,7 @@ kfind
 kinfocenter
 ksystemlog
 
-# --- Thèmes et apparence ---
+# --- Themes and appearance ---
 breeze
 breeze-gtk-theme
 breeze-icon-theme
@@ -41,14 +41,14 @@ kde-style-breeze
 kvantum
 qt6-style-kvantum
 
-# --- Suite bureautique ---
+# --- Office suite ---
 libreoffice
 libreoffice-kde5
 libreoffice-l10n-fr
 libreoffice-help-fr
 libreoffice-style-breeze
 
-# --- Navigateur ---
+# --- Browser ---
 firefox-esr
 firefox-esr-l10n-fr
 webext-ublock-origin-firefox
@@ -57,29 +57,29 @@ webext-ublock-origin-firefox
 thunderbird
 thunderbird-l10n-fr
 
-# --- Messagerie et visio ---
-# Element Desktop (via dépôt externe — ajouté par hook)
-# Jitsi Meet (webapp — pas de paquet desktop nécessaire)
+# --- Messaging and video calls ---
+# Element Desktop (via external repo - added by hook)
+# Jitsi Meet (webapp - no desktop package needed)
 
-# --- Stockage cloud ---
-# Nextcloud Desktop (via dépôt externe — ajouté par hook)
+# --- Cloud storage ---
+# Nextcloud Desktop (via external repo - added by hook)
 
-# --- Multimédia ---
+# --- Multimedia ---
 vlc
 vlc-plugin-base
 
-# --- Utilitaires graphiques ---
+# --- Graphical utilities ---
 filezilla
 keepassxc
 redshift
 flameshot
 
-# --- Gestion de paquets graphique ---
+# --- Graphical package management ---
 plasma-discover
 plasma-discover-backend-flatpak
 flatpak
 
-# --- Polices ---
+# --- Fonts ---
 fonts-noto
 fonts-noto-color-emoji
 fonts-liberation

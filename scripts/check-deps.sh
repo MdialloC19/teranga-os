@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# TérangaOS — Vérification des dépendances
+# TérangaOS — Build dependency verification
 # ============================================================
 
 set -euo pipefail
@@ -10,7 +10,7 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo -e "${GREEN}[TérangaOS]${NC} Vérification des dépendances de build..."
+echo -e "${GREEN}[TérangaOS]${NC} Verifying build dependencies..."
 echo ""
 
 MISSING=0
@@ -19,14 +19,14 @@ check() {
     local name="$1"
     local package="${2:-$1}"
     if command -v "$name" &> /dev/null; then
-        echo -e "  ✅ ${GREEN}${name}${NC} — installé"
+        echo -e "  ✅ ${GREEN}${name}${NC} — installed"
     else
-        echo -e "  ❌ ${RED}${name}${NC} — MANQUANT (apt install ${package})"
+        echo -e "  ❌ ${RED}${name}${NC} — MISSING (apt install ${package})"
         MISSING=$((MISSING + 1))
     fi
 }
 
-echo "Outils de build :"
+echo "Build tools:"
 check "lb" "live-build"
 check "debootstrap" "debootstrap"
 check "xorriso" "xorriso"
@@ -35,15 +35,15 @@ check "git" "git"
 check "make" "make"
 
 echo ""
-echo "Outils optionnels :"
+echo "Optional tools:"
 check "qemu-system-x86_64" "qemu-system-x86"
 check "docker" "docker.io"
 
 echo ""
 if [[ $MISSING -eq 0 ]]; then
-    echo -e "${GREEN}✅ Toutes les dépendances sont installées !${NC}"
+    echo -e "${GREEN}✅ All dependencies are installed!${NC}"
 else
-    echo -e "${YELLOW}⚠️  ${MISSING} dépendance(s) manquante(s).${NC}"
-    echo -e "Installez-les avec :"
+    echo -e "${YELLOW}⚠️  ${MISSING} dependency(ies) missing.${NC}"
+    echo -e "Install them with:"
     echo -e "  ${GREEN}sudo apt install -y live-build debootstrap xorriso mtools git make${NC}"
 fi

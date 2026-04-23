@@ -1,9 +1,9 @@
 # ============================================================
-# TérangaOS — Paquets de base (toutes éditions)
-# Ces paquets sont installés dans TOUTES les éditions
+# TérangaOS — Base packages (all editions)
+# These packages are installed in ALL editions
 # ============================================================
 
-# --- Système ---
+# --- System ---
 linux-image-amd64
 firmware-linux-free
 firmware-linux-nonfree
@@ -13,7 +13,7 @@ firmware-misc-nonfree
 grub-efi-amd64
 efibootmgr
 
-# --- Réseau ---
+# --- Network ---
 network-manager
 wpasupplicant
 wireless-tools
@@ -21,7 +21,7 @@ curl
 wget
 openssh-client
 
-# --- Sécurité ---
+# --- Security ---
 apparmor
 apparmor-utils
 ufw
@@ -30,13 +30,13 @@ clamav-daemon
 cryptsetup
 gnupg
 
-# --- Système de fichiers ---
+# --- File system ---
 ntfs-3g
 exfat-fuse
 exfat-utils
 dosfstools
 
-# --- Utilitaires ---
+# --- Utilities ---
 bash-completion
 htop
 nano
@@ -51,16 +51,16 @@ ca-certificates
 locales
 console-setup
 
-# --- Impression ---
+# --- Printing ---
 cups
 cups-bsd
 printer-driver-all
 
-# --- Son ---
+# --- Sound ---
 pipewire
 pipewire-pulse
 wireplumber
 
-# --- Langues ---
+# --- Languages ---
 locales-all
 hunspell-fr

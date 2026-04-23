@@ -1,9 +1,9 @@
 #!/bin/bash
 # ============================================================
-# TérangaOS — Script de build principal
-# Lit config/editions.json et construit l'ISO correspondante
+# TérangaOS — Main build script
+# Reads config/editions.json and builds corresponding ISO
 #
-# Usage :
+# Usage:
 #   sudo bash scripts/build-edition.sh --edition rpi
 #   sudo bash scripts/build-edition.sh --edition desktop
 #   sudo bash scripts/build-edition.sh --edition leger
@@ -18,30 +18,30 @@ BUILD_DIR="./build"
 OUTPUT_DIR="${BUILD_DIR}/output"
 LOG_DIR="${BUILD_DIR}/logs"
 
-# --- Couleurs ---
+# --- Colors ---
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 
 log_info()  { echo -e "${GREEN}[TérangaOS]${NC} $*"; }
-log_warn()  { echo -e "${YELLOW}[ATTENTION]${NC} $*"; }
-log_error() { echo -e "${RED}[ERREUR]${NC} $*" >&2; }
+log_warn()  { echo -e "${YELLOW}[WARNING]${NC} $*"; }
+log_error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
 log_step()  { echo -e "\n${BLUE}${BOLD}══ $* ══${NC}\n"; }
 
 # ============================================================
-# Vérifications
+# Checks
 # ============================================================
 check_deps() {
     local missing=0
 
     for cmd in jq live-build debootstrap git; do
         if ! command -v "$cmd" &>/dev/null; then
-            log_warn "Manquant : $cmd"
+            log_warn "Missing: $cmd"
             missing=1
         fi
     done
 
     if [ "$missing" -eq 1 ]; then
-        log_info "Installation des dépendances..."
+        log_info "Installing dependencies..."
         apt-get update -qq
         apt-get install -y live-build debootstrap jq git
     fi
@@ -49,14 +49,14 @@ check_deps() {
 
 check_root() {
     if [[ $EUID -ne 0 ]]; then
-        log_error "Ce script doit être exécuté en tant que root"
-        echo "Usage : sudo bash $0 --edition rpi"
+        log_error "This script must be run as root"
+        echo "Usage: sudo bash $0 --edition rpi"
         exit 1
     fi
 }
 
 # ============================================================
-# Lire la config JSON d'une édition
+# Read JSON config of an edition
 # ============================================================
 get_edition_config() {
     local edition="$1"
@@ -70,7 +70,7 @@ get_field() {
 }
 
 # ============================================================
-# Construire une édition
+# Build an edition
 # ============================================================
 build_edition() {
     local edition="$1"
@@ -78,12 +78,12 @@ build_edition() {
     config=$(get_edition_config "$edition")
 
     if [ -z "$config" ]; then
-        log_error "Édition '$edition' introuvable dans ${CONFIG_JSON}"
-        echo "Éditions disponibles : rpi, desktop, leger, server"
+        log_error "Edition '$edition' not found in ${CONFIG_JSON}"
+        echo "Available editions: rpi, desktop, leger, server"
         exit 1
     fi
 
-    # Lire les paramètres
+    # Read parameters
     local name arch desktop theme icons font lang timezone keyboard hostname output_name
     name=$(get_field "$config" "name")
     arch=$(get_field "$config" "arch")
@@ -95,24 +95,24 @@ build_edition() {
     hostname=$(get_field "$config" "hostname")
     output_name=$(get_field "$config" "output_name")
 
-    log_step "Build : ${name}"
-    log_info "  Édition   : ${edition}"
+    log_step "Build: ${name}"
+    log_info "  Edition   : ${edition}"
     log_info "  Arch      : ${arch}"
-    log_info "  Bureau    : ${desktop}"
-    log_info "  Thème     : ${theme}"
-    log_info "  Sortie    : ${output_name}.iso"
+    log_info "  Desktop   : ${desktop}"
+    log_info "  Theme     : ${theme}"
+    log_info "  Output    : ${output_name}.iso"
 
-    # Créer les dossiers
+    # Create folders
     mkdir -p "${OUTPUT_DIR}" "${LOG_DIR}"
     local log_file="${LOG_DIR}/${edition}-build.log"
     local lb_dir="${BUILD_DIR}/lb-${edition}"
 
-    # Nettoyer le build précédent
+    # Clean previous build
     rm -rf "${lb_dir}"
     mkdir -p "${lb_dir}"
     cd "${lb_dir}"
 
-    # Configurer live-build
+    # Configure live-build
     lb config \
         --architecture "${arch}" \
         --distribution bookworm \
@@ -123,7 +123,7 @@ build_edition() {
         --memtest none \
         2>&1 | tee -a "${log_file}"
 
-    # Copier les hooks et listes de paquets
+    # Copy hooks and package lists
     cp -r ../../config/package-lists/base.list.chroot config/package-lists/
     if [ "$desktop" != "none" ]; then
         cp -r ../../config/package-lists/"${edition}".list.chroot \
@@ -136,23 +136,23 @@ build_edition() {
     mkdir -p config/hooks/live
     cp ../../config/hooks/*.hook.chroot config/hooks/live/ 2>/dev/null || true
 
-    # Lancer le build
-    log_info "Lancement du build (peut prendre 30-60 min)..."
+    # Launch build
+    log_info "Starting build (may take 30-60 min)..."
     lb build 2>&1 | tee -a "${log_file}"
 
-    # Copier l'ISO dans le dossier de sortie
+    # Copy ISO to output folder
     if [ -f "live-image-${arch}.hybrid.iso" ]; then
         cp "live-image-${arch}.hybrid.iso" \
            "../../${OUTPUT_DIR}/${output_name}.iso"
 
-        # Générer le checksum SHA256
+        # Generate SHA256 checksum
         sha256sum "../../${OUTPUT_DIR}/${output_name}.iso" | \
             awk '{print $1}' > "../../${OUTPUT_DIR}/${output_name}.sha256"
 
-        log_info "✓ ISO créée : ${OUTPUT_DIR}/${output_name}.iso"
-        log_info "✓ SHA256   : ${OUTPUT_DIR}/${output_name}.sha256"
+        log_info "✓ ISO created: ${OUTPUT_DIR}/${output_name}.iso"
+        log_info "✓ SHA256  : ${OUTPUT_DIR}/${output_name}.sha256"
     else
-        log_error "Build échoué ! Voir les logs : ${log_file}"
+        log_error "Build failed! Check logs: ${log_file}"
         exit 1
     fi
 
@@ -166,7 +166,7 @@ main() {
     local edition=""
     local build_all=false
 
-    # Parser les arguments
+    # Parse arguments
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -e|--edition)
@@ -183,7 +183,7 @@ main() {
                 exit 0
                 ;;
             *)
-                log_error "Argument inconnu : $1"
+                log_error "Unknown argument: $1"
                 exit 1
                 ;;
         esac
@@ -200,7 +200,7 @@ main() {
     echo -e "${NC}"
 
     if [ "$build_all" = true ]; then
-        log_info "Build de toutes les éditions..."
+        log_info "Building all editions..."
         local editions
         mapfile -t editions < <(jq -r '.[].edition' "$CONFIG_JSON")
         for ed in "${editions[@]}"; do
@@ -209,12 +209,12 @@ main() {
     elif [ -n "$edition" ]; then
         build_edition "$edition"
     else
-        log_error "Spécifie une édition : --edition rpi|desktop|leger|server"
-        echo "       ou --all pour toutes"
+        log_error "Specify an edition: --edition rpi|desktop|leger|server"
+        echo "       or --all for all editions"
         exit 1
     fi
 
-    log_info "Build terminé ! ISOs dans : ${OUTPUT_DIR}/"
+    log_info "Build complete! ISOs in: ${OUTPUT_DIR}/"
     ls -lh "${OUTPUT_DIR}/"*.iso 2>/dev/null || true
 }
 

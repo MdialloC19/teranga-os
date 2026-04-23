@@ -1,68 +1,68 @@
 #!/bin/bash
 # ============================================================
-# TérangaOS — Hook de sécurité (post-installation)
-# Durcit le système par défaut
+# TérangaOS — Security hardening hook (post-installation)
+# Hardens the system by default
 # ============================================================
 
 set -e
 
-echo "[TérangaOS] Application du durcissement de sécurité..."
+echo "[TérangaOS] Applying security hardening..."
 
-# --- 1. Activer le firewall UFW ---
+# --- 1. Enable UFW firewall ---
 ufw default deny incoming
 ufw default allow outgoing
 ufw allow ssh
 ufw --force enable
-echo "[TérangaOS] ✓ Firewall UFW activé"
+echo "[TérangaOS] ✓ UFW firewall enabled"
 
-# --- 2. Activer AppArmor ---
+# --- 2. Enable AppArmor ---
 if command -v aa-enforce &> /dev/null; then
     aa-enforce /etc/apparmor.d/*
-    echo "[TérangaOS] ✓ AppArmor activé en mode enforce"
+    echo "[TérangaOS] ✓ AppArmor enabled in enforce mode"
 fi
 
-# --- 3. Paramètres kernel sécurisés ---
+# --- 3. Secure kernel parameters ---
 cat >> /etc/sysctl.d/99-terangaos-security.conf << 'SYSCTL'
-# TérangaOS — Durcissement kernel
+# TérangaOS — Kernel hardening
 
-# Désactiver la redirection IP
+# Disable IP forwarding
 net.ipv4.ip_forward = 0
 net.ipv6.conf.all.forwarding = 0
 
-# Protection contre le spoofing
+# Spoofing protection
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
 
-# Ignorer les ICMP redirect
+# Ignore ICMP redirects
 net.ipv4.conf.all.accept_redirects = 0
 net.ipv6.conf.all.accept_redirects = 0
 
-# Ignorer les requêtes ICMP broadcast
+# Ignore ICMP broadcast requests
 net.ipv4.icmp_echo_ignore_broadcasts = 1
 
-# Protection syn flood
+# SYN flood protection
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_max_syn_backlog = 2048
 net.ipv4.tcp_synack_retries = 2
 
-# Désactiver les modules kernel non signés
+# Disable unsigned kernel modules
 kernel.modules_disabled = 0
 
-# Restreindre dmesg aux utilisateurs root
+# Restrict dmesg to root users
 kernel.dmesg_restrict = 1
 
-# Restreindre les ptr kernel
+# Restrict kernel pointers
 kernel.kptr_restrict = 2
 
-# ASLR complet
+# Full ASLR
 kernel.randomize_va_space = 2
 
-# Restreindre les core dumps
+# Restrict core dumps
 fs.suid_dumpable = 0
 SYSCTL
-echo "[TérangaOS] ✓ Paramètres kernel sécurisés appliqués"
+echo "[TérangaOS] ✓ Secure kernel parameters applied"
 
-# --- 4. Désactiver les services inutiles ---
+# --- 4. Disable unnecessary services ---
 DISABLE_SERVICES=(
     avahi-daemon
     cups-browsed
@@ -70,14 +70,14 @@ DISABLE_SERVICES=(
 for svc in "${DISABLE_SERVICES[@]}"; do
     systemctl disable "$svc" 2>/dev/null || true
 done
-echo "[TérangaOS] ✓ Services inutiles désactivés"
+echo "[TérangaOS] ✓ Unnecessary services disabled"
 
-# --- 5. Permissions fichiers sensibles ---
+# --- 5. Sensitive file permissions ---
 chmod 600 /etc/shadow
 chmod 600 /etc/gshadow
 chmod 644 /etc/passwd
 chmod 644 /etc/group
-echo "[TérangaOS] ✓ Permissions fichiers sensibles corrigées"
+echo "[TérangaOS] ✓ Sensitive file permissions fixed"
 
 # --- 6. Bannière de connexion ---
 cat > /etc/issue << 'BANNER'
@@ -89,9 +89,9 @@ cat > /etc/issue << 'BANNER'
   ╚═══════════════════════════════════════════════╝
 
 BANNER
-echo "[TérangaOS] ✓ Bannière de connexion configurée"
+echo "[TérangaOS] ✓ Login banner configured"
 
-# --- 7. Configurer les mises à jour automatiques de sécurité ---
+# --- 7. Configure automatic security updates ---
 cat > /etc/apt/apt.conf.d/50unattended-upgrades << 'AUTOUPDATE'
 Unattended-Upgrade::Allowed-Origins {
     "${distro_id}:${distro_codename}-security";
@@ -101,6 +101,6 @@ Unattended-Upgrade::MinimalSteps "true";
 Unattended-Upgrade::Remove-Unused-Dependencies "true";
 Unattended-Upgrade::Automatic-Reboot "false";
 AUTOUPDATE
-echo "[TérangaOS] ✓ Mises à jour de sécurité automatiques configurées"
+echo "[TérangaOS] ✓ Automatic security updates configured"
 
-echo "[TérangaOS] Durcissement de sécurité terminé ✓"
+echo "[TérangaOS] Security hardening complete ✓"

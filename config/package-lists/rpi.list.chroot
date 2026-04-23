@@ -1,10 +1,10 @@
 # ============================================================
-# TérangaOS RPi — Paquets pour Raspberry Pi 5
-# Bureau Xfce optimisé pour ARM64
-# RAM minimum : 2 Go (recommandé : 4-8 Go)
+# TérangaOS RPi — Packages for Raspberry Pi 5
+# Optimized Xfce desktop for ARM64
+# Minimum RAM: 2 GB (recommended: 4-8 GB)
 # ============================================================
 
-# --- Xfce Desktop (léger, fluide sur RPi) ---
+# --- Xfce Desktop (lightweight, smooth on RPi) ---
 xfce4
 xfce4-goodies
 xfce4-terminal
@@ -19,12 +19,12 @@ lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
 
-# --- Gestionnaire de fichiers ---
+# --- File manager ---
 thunar
 thunar-archive-plugin
 thunar-volman
 
-# --- Suite bureautique ---
+# --- Office suite ---
 libreoffice-writer
 libreoffice-calc
 libreoffice-impress
@@ -32,7 +32,7 @@ libreoffice-l10n-fr
 libreoffice-help-fr
 libreoffice-gtk3
 
-# --- Navigateur ---
+# --- Browser ---
 firefox-esr
 firefox-esr-l10n-fr
 
@@ -40,18 +40,18 @@ firefox-esr-l10n-fr
 thunderbird
 thunderbird-l10n-fr
 
-# --- Messagerie ---
-# Element Desktop sera installé via script (pas dans les repos Debian ARM)
+# --- Messaging ---
+# Element Desktop will be installed via script (not in Debian ARM repos)
 
-# --- Stockage cloud ---
+# --- Cloud storage ---
 nextcloud-desktop
 
-# --- Multimédia ---
+# --- Multimedia ---
 vlc
 celluloid
 ristretto
 
-# --- Utilitaires ---
+# --- Utilities ---
 mousepad
 atril
 galculator
@@ -61,12 +61,12 @@ baobab
 synaptic
 gparted
 
-# --- Polices ---
+# --- Fonts ---
 fonts-noto
 fonts-noto-color-emoji
 fonts-liberation
 fonts-dejavu
 
-# --- Outils RPi spécifiques ---
+# --- RPi-specific tools ---
 raspi-config
 rpi-imager
