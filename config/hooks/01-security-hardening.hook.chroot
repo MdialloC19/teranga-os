@@ -79,13 +79,13 @@ chmod 644 /etc/passwd
 chmod 644 /etc/group
 echo "[TérangaOS] ✓ Sensitive file permissions fixed"
 
-# --- 6. Bannière de connexion ---
+# --- 6. Login banner ---
 cat > /etc/issue << 'BANNER'
 
   ╔═══════════════════════════════════════════════╗
   ║          🇸🇳  TérangaOS  🇸🇳                   ║
-  ║  Système souverain — Accès autorisé uniquement ║
-  ║  Toute activité est surveillée et enregistrée  ║
+  ║  Sovereign system — Authorized access only ║
+  ║  All activity is monitored and logged ║
   ╚═══════════════════════════════════════════════╝
 
 BANNER

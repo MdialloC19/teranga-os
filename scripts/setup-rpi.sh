@@ -121,7 +121,7 @@ run_mod() {
 main() {
     local only_mod=""
     local do_list=false
-    local edition="rpi"  # édition par défaut
+    local edition="rpi"  # default edition
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -154,7 +154,7 @@ main() {
         exit 0
     fi
 
-    # Bannière
+    # Banner
     echo ""
     echo -e "${GREEN}${BOLD}"
     echo "  ╔══════════════════════════════════════════════╗"
@@ -200,13 +200,13 @@ main() {
     echo ""
     echo -e "${GREEN}${BOLD}"
     echo "  ╔══════════════════════════════════════════════╗"
-    echo "  ║   ✅ Installation terminée en ${duration} min        ║"
+    echo "  ║   ✅ Installation complete in ${duration} min        ║"
     echo "  ║                                              ║"
-    echo "  ║   → sudo reboot  pour redémarrer             ║"
+    echo "  ║   → sudo reboot  to restart             ║"
     echo "  ║   → Ndank ndank mooy jàpp golo ci ñaay 🌍   ║"
     echo "  ╚══════════════════════════════════════════════╝"
     echo -e "${NC}"
-    echo "  Log complet : ${LOG_FILE}"
+    echo "  Full log: ${LOG_FILE}"
 }
 
 main "$@"
