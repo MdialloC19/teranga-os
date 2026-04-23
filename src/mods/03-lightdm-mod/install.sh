@@ -7,17 +7,18 @@ log_step "[${mod_name}] Configuration LightDM"
 
 # Copier les assets branding
 BRANDING_DIR="/usr/share/terangaos/branding"
+BRANDING_SOURCE="${REPO_ROOT}/assets/branding"
 mkdir -p "$BRANDING_DIR"
 
-[ -f "${REPO_ROOT}/branding/logo/logo.png" ] && \
-    cp "${REPO_ROOT}/branding/logo/logo.png" "${BRANDING_DIR}/logo.png" && \
+[ -f "${BRANDING_SOURCE}/logo/logo.png" ] && \
+    cp "${BRANDING_SOURCE}/logo/logo.png" "${BRANDING_DIR}/logo.png" && \
     log_info "Logo copié ✓"
 
-if [ -f "${REPO_ROOT}/branding/wallpapers/dakar-sunset.png" ]; then
-    cp "${REPO_ROOT}/branding/wallpapers/dakar-sunset.png" \
+if [ -f "${BRANDING_SOURCE}/wallpapers/dakar-sunset.png" ]; then
+    cp "${BRANDING_SOURCE}/wallpapers/dakar-sunset.png" \
        "${BRANDING_DIR}/wallpaper-default.png"
     mkdir -p /usr/share/backgrounds/terangaos
-    cp "${REPO_ROOT}/branding/wallpapers/"*.png \
+    cp "${BRANDING_SOURCE}/wallpapers/"*.png \
        /usr/share/backgrounds/terangaos/ 2>/dev/null || true
     log_info "Wallpapers copiés ✓"
 fi
