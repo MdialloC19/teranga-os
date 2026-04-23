@@ -1,9 +1,9 @@
 #!/bin/bash
-# MOD 07 — Branding TérangaOS (hostname, os-release, MOTD)
+# MOD 07 — TérangaOS branding (hostname, os-release, MOTD)
 source "$(dirname "$0")/../../lib/common.sh"
 source "$(dirname "$0")/../../lib/args.sh"
 mod_name="07-branding"
-log_step "[${mod_name}] Application du branding TérangaOS"
+log_step "[${mod_name}] Apply TérangaOS branding"
 
 # OS release
 cat > /etc/os-release << EOF
@@ -21,7 +21,7 @@ EOF
 
 # Hostname
 echo "${TERANGA_HOSTNAME}" > /etc/hostname
-# Remplacement compatible Linux et macOS
+# Compatible replacement for Linux and macOS
 if grep -q "127\.0\.1\.1" /etc/hosts; then
     sed -i "s/127\.0\.1\.1.*/127.0.1.1	${TERANGA_HOSTNAME}/" /etc/hosts
 else
@@ -51,7 +51,7 @@ cat > /etc/issue << 'EOF'
 
 EOF
 
-# Wallpaper bureau par défaut pour /etc/skel
+# Default desktop wallpaper for /etc/skel
 SKEL_XFCE="/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml"
 mkdir -p "$SKEL_XFCE"
 cat > "${SKEL_XFCE}/xfce4-desktop.xml" << 'EOF'
@@ -71,4 +71,4 @@ cat > "${SKEL_XFCE}/xfce4-desktop.xml" << 'EOF'
 </channel>
 EOF
 
-log_info "[${mod_name}] ✓ Branding : hostname + os-release + MOTD + wallpaper"
+log_info "[${mod_name}] ✓ Branding: hostname + os-release + MOTD + wallpaper"
