@@ -1,8 +1,8 @@
 #!/bin/bash
-# MOD 06 — Sécurité (UFW, AppArmor, ClamAV, Fail2ban)
+# MOD 06 — Security hardening (UFW, AppArmor, ClamAV, Fail2ban)
 source "$(dirname "$0")/../../lib/common.sh"
 mod_name="06-security"
-log_step "[${mod_name}] Durcissement de sécurité"
+log_step "[${mod_name}] Security hardening"
 
 apt-get install -y \
     ufw apparmor apparmor-utils \
@@ -14,11 +14,11 @@ ufw default deny incoming
 ufw default allow outgoing
 ufw allow ssh
 ufw --force enable
-log_info "Firewall UFW activé ✓"
+log_info "Firewall UFW enabled ✓"
 
-# Paramètres kernel
+# Kernel parameters
 cat > /etc/sysctl.d/99-terangaos.conf << 'EOF'
-# TérangaOS — Sécurité kernel
+# TérangaOS — Kernel security
 net.ipv4.ip_forward = 0
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.all.accept_redirects = 0
@@ -31,7 +31,7 @@ fs.suid_dumpable = 0
 EOF
 sysctl -p /etc/sysctl.d/99-terangaos.conf
 
-# Mises à jour auto de sécurité
+# Automatic security updates
 cat > /etc/apt/apt.conf.d/50unattended-upgrades << 'EOF'
 Unattended-Upgrade::Allowed-Origins {
     "${distro_id}:${distro_codename}-security";

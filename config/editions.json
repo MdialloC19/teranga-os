@@ -2,7 +2,7 @@
   {
     "edition": "rpi",
     "name": "TérangaOS RPi Edition",
-    "description": "Édition Raspberry Pi 5 — Bureau Xfce léger",
+    "description": "Raspberry Pi 5 Edition — Lightweight Xfce desktop",
     "base": "debian",
     "codename": "bookworm",
     "arch": "arm64",
@@ -21,7 +21,7 @@
   {
     "edition": "desktop",
     "name": "TérangaOS Desktop",
-    "description": "Édition Bureau — PC standard x86_64",
+    "description": "Desktop Edition — Standard x86_64 PC",
     "base": "debian",
     "codename": "bookworm",
     "arch": "amd64",
@@ -39,8 +39,8 @@
   },
   {
     "edition": "leger",
-    "name": "TérangaOS Léger",
-    "description": "Édition légère — Vieux matériel (512 Mo RAM)",
+    "name": "TérangaOS Lightweight",
+    "description": "Lightweight Edition — Legacy hardware (512 MB RAM)",
     "base": "debian",
     "codename": "bookworm",
     "arch": "amd64",
@@ -59,7 +59,7 @@
   {
     "edition": "server",
     "name": "TérangaOS Server",
-    "description": "Édition serveur — CLI uniquement",
+    "description": "Server Edition — CLI only",
     "base": "debian",
     "codename": "bookworm",
     "arch": "amd64",

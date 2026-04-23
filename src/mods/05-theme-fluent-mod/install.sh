@@ -1,31 +1,23 @@
 #!/bin/bash
-# MOD 05 — Thème Fluent GTK (look Windows 11)
+# MOD 05 — Fluent GTK theme (Windows 11 look)
 source "$(dirname "$0")/../../lib/common.sh"
 mod_name="05-theme-fluent"
-log_step "[${mod_name}] Installation du thème Fluent"
+log_step "[${mod_name}] Fluent theme installation"
 
 apt-get install -y git curl unzip
 
-# Thème GTK Fluent (mode sombre, accent vert TérangaOS)
-log_info "Téléchargement Fluent-gtk-theme..."
+# Fluent GTK theme (dark mode, TérangaOS green accent)
+log_info "Downloading Fluent-gtk-theme..."
 rm -rf /tmp/Fluent-gtk-theme
 git clone --depth=1 https://github.com/vinceliuice/Fluent-gtk-theme.git \
     /tmp/Fluent-gtk-theme
 bash /tmp/Fluent-gtk-theme/install.sh \
     --theme green --color dark --size standard --dest /usr/share/themes
 rm -rf /tmp/Fluent-gtk-theme
-log_info "Thème Fluent GTK ✓"
+log_info "Fluent GTK theme ✓"
 
-# Icônes Fluent
-log_info "Téléchargement Fluent-icon-theme..."
-rm -rf /tmp/Fluent-icon-theme
-git clone --depth=1 https://github.com/vinceliuice/Fluent-icon-theme.git \
-    /tmp/Fluent-icon-theme
-bash /tmp/Fluent-icon-theme/install.sh --dest /usr/share/icons
-rm -rf /tmp/Fluent-icon-theme
-log_info "Icônes Fluent ✓"
 
-# Police Inter
+# Inter font
 apt-get install -y fonts-inter 2>/dev/null || {
     mkdir -p /usr/share/fonts/truetype/inter
     curl -sL "https://github.com/rsms/inter/releases/download/v4.0/Inter-4.0.zip" \
@@ -33,14 +25,14 @@ apt-get install -y fonts-inter 2>/dev/null || {
     unzip -q /tmp/inter.zip -d /tmp/inter && \
     find /tmp/inter -name "*.ttf" -exec cp {} /usr/share/fonts/truetype/inter/ \; && \
     fc-cache -f && rm -rf /tmp/inter /tmp/inter.zip
-    log_info "Police Inter ✓"
+    log_info "Inter font ✓"
 }
 
-# Curseur Bibata
+# Bibata cursor
 apt-get install -y bibata-cursor-theme 2>/dev/null || \
-    log_warn "Curseur Bibata non disponible, curseur par défaut utilisé"
+    log_warn "Bibata cursor theme unavailable, using default cursor"
 
-# Appliquer pour tous les nouveaux utilisateurs (/etc/skel)
+# Apply theme settings for all new users (/etc/skel)
 SKEL_XFCE="/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml"
 mkdir -p "$SKEL_XFCE"
 
@@ -82,4 +74,4 @@ cat > "${SKEL_XFCE}/xfwm4.xml" << 'EOF'
 </channel>
 EOF
 
-log_info "[${mod_name}] ✓ Thème Fluent-Dark + Icônes + Inter + Bibata"
+log_info "[${mod_name}] ✓ Fluent-Dark theme + Icons + Inter + Bibata"

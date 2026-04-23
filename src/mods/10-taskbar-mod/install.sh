@@ -1,8 +1,8 @@
 #!/bin/bash
-# MOD 10 — Barre des tâches Xfce4 (style Windows)
+# MOD 10 — Xfce4 taskbar configuration (Windows-style)
 source "$(dirname "$0")/../../lib/common.sh"
 mod_name="10-taskbar-mod"
-log_step "[${mod_name}] Configuration barre des tâches (style Windows)"
+log_step "[${mod_name}] Taskbar configuration (Windows-style)"
 
 SKEL_PANEL="/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml"
 mkdir -p "$SKEL_PANEL"
@@ -54,7 +54,7 @@ cat > "${SKEL_PANEL}/xfce4-panel.xml" << 'EOF'
 </channel>
 EOF
 
-# Thunar : double-clic
+# Thunar: double-click
 cat > "${SKEL_PANEL}/../thunar.xml" << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="thunar" version="1.0">
@@ -65,4 +65,4 @@ cat > "${SKEL_PANEL}/../thunar.xml" << 'EOF'
 </channel>
 EOF
 
-log_info "[${mod_name}] ✓ Barre en bas + Menu Whisker + Horloge FR"
+log_info "[${mod_name}] ✓ Taskbar at bottom + Whisker menu + Clock FR"
