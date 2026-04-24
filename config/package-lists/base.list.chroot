@@ -33,7 +33,7 @@ gnupg
 # --- File system ---
 ntfs-3g
 exfat-fuse
-exfat-utils
+exfatprogs
 dosfstools
 
 # --- Utilities ---

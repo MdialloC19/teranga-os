@@ -1,68 +1,58 @@
 # ============================================================
-# TérangaOS Desktop — KDE Plasma 6 packages
-# Windows-like interface for standard workstations
+# TérangaOS Desktop — Xfce + Fluent theme packages
+# Windows 11-like interface for standard workstations
+# Base: Debian 12 Bookworm
 # ============================================================
 
-# --- KDE Plasma Desktop ---
-task-kde-desktop
-kde-plasma-desktop
-plasma-workspace
-sddm
-sddm-theme-breeze
+# --- Xfce Desktop ---
+task-xfce-desktop
+xfce4
+xfce4-goodies
+xfce4-terminal
+xfce4-power-manager
+xfce4-screenshooter
+xfce4-taskmanager
+xfce4-whiskermenu-plugin
+xfce4-clipman-plugin
+xfce4-pulseaudio-plugin
+xfce4-notifyd
+xfce4-settings
 
-# --- Essential KDE Applications ---
-dolphin
-dolphin-plugins
-konsole
-kate
-ark
-gwenview
-okular
-spectacle
-kcalc
-kscreen
-plasma-nm
-plasma-pa
-bluedevil
-powerdevil
-kde-config-screenlocker
-kde-config-sddm
-kmenuedit
-kfind
-kinfocenter
-ksystemlog
+# --- Display manager ---
+lightdm
+lightdm-gtk-greeter
+lightdm-gtk-greeter-settings
+
+# --- File manager ---
+thunar
+thunar-archive-plugin
+thunar-volman
+tumbler
+gvfs
+gvfs-backends
 
 # --- Themes and appearance ---
-breeze
 breeze-gtk-theme
 breeze-icon-theme
 breeze-cursor-theme
-kde-style-breeze
-kvantum
-qt6-style-kvantum
+papirus-icon-theme
+lxappearance
+qt5ct
+dconf-editor
 
 # --- Office suite ---
 libreoffice
-libreoffice-kde5
+libreoffice-gtk3
 libreoffice-l10n-fr
 libreoffice-help-fr
-libreoffice-style-breeze
 
 # --- Browser ---
 firefox-esr
 firefox-esr-l10n-fr
-webext-ublock-origin-firefox
 
 # --- Email ---
 thunderbird
 thunderbird-l10n-fr
-
-# --- Messaging and video calls ---
-# Element Desktop (via external repo - added by hook)
-# Jitsi Meet (webapp - no desktop package needed)
-
-# --- Cloud storage ---
-# Nextcloud Desktop (via external repo - added by hook)
 
 # --- Multimedia ---
 vlc
@@ -73,10 +63,17 @@ filezilla
 keepassxc
 redshift
 flameshot
+mousepad
+ristretto
+parole
+galculator
+gnome-disk-utility
+baobab
+file-roller
+evince
 
 # --- Graphical package management ---
-plasma-discover
-plasma-discover-backend-flatpak
+synaptic
 flatpak
 
 # --- Fonts ---
@@ -84,3 +81,4 @@ fonts-noto
 fonts-noto-color-emoji
 fonts-liberation
 fonts-dejavu
+fonts-inter

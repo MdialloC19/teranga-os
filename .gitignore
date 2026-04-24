@@ -51,3 +51,5 @@ teranga_os_interface_windows.md
 task.md
 # Docs locaux (non versionnés — à décider au cas par cas)
 /docs/
+# Scripts admin (tokens, one-shot)
+scripts/create-issues.sh
