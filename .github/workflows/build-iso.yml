@@ -1,0 +1,179 @@
+name: 🏗️ Build ISO
+
+on:
+  workflow_dispatch:
+    inputs:
+      edition:
+        description: 'Edition to build'
+        required: true
+        default: 'desktop'
+        type: choice
+        options:
+          - desktop
+          - rpi
+          - leger
+
+permissions:
+  contents: write
+
+jobs:
+  build-iso:
+    name: Build TérangaOS ${{ github.event.inputs.edition }} ISO
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bookworm
+      options: --privileged
+    timeout-minutes: 120
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: 📥 Install git + checkout deps
+        shell: sh
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq git ca-certificates bash
+
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Install build dependencies
+        run: |
+          apt-get install -y \
+            live-build debootstrap jq \
+            cpio xorriso squashfs-tools \
+            grub-efi-amd64-bin grub-pc-bin \
+            syslinux-common isolinux \
+            mtools dosfstools \
+            debian-archive-keyring
+
+      - name: 🏗️ Configure + Build ISO
+        run: |
+          set -euo pipefail
+
+          EDITION="${{ github.event.inputs.edition }}"
+          CONFIG=$(jq -c ".[] | select(.edition == \"${EDITION}\")" config/editions.json)
+
+          if [ -z "$CONFIG" ]; then
+            echo "❌ Edition '${EDITION}' not found"
+            exit 1
+          fi
+
+          ARCH=$(echo "$CONFIG" | jq -r '.arch')
+          LANG_VAL=$(echo "$CONFIG" | jq -r '.lang')
+          KB=$(echo "$CONFIG" | jq -r '.keyboard')
+          TZ=$(echo "$CONFIG" | jq -r '.timezone')
+          HOST=$(echo "$CONFIG" | jq -r '.hostname')
+          OUTPUT=$(echo "$CONFIG" | jq -r '.output_name')
+          DESKTOP=$(echo "$CONFIG" | jq -r '.desktop')
+
+          echo "ARCH=${ARCH}" >> $GITHUB_ENV
+          echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
+          echo "EDITION=${EDITION}" >> $GITHUB_ENV
+
+          echo "========================================="
+          echo "  🇸🇳 Building ${EDITION} (${ARCH})"
+          echo "========================================="
+
+          # --- Workspace ---
+          mkdir -p build/lb-${EDITION}
+          cd build/lb-${EDITION}
+
+          # --- Configure ---
+          lb config \
+            --architecture "${ARCH}" \
+            --distribution bookworm \
+            --archive-areas "main contrib non-free non-free-firmware" \
+            --apt-recommends false \
+            --binary-images iso-hybrid \
+            --bootappend-live "boot=live components locales=${LANG_VAL} keyboard-layouts=${KB} timezone=${TZ} hostname=${HOST}" \
+            --memtest none \
+            --initsystem systemd
+
+          echo "✓ lb config done"
+
+          # --- Copy package lists ---
+          REPO_ROOT="${GITHUB_WORKSPACE}"
+          cp "${REPO_ROOT}/config/package-lists/base.list.chroot" config/package-lists/
+
+          if [ "$DESKTOP" != "none" ]; then
+            if [ -f "${REPO_ROOT}/config/package-lists/${EDITION}.list.chroot" ]; then
+              cp "${REPO_ROOT}/config/package-lists/${EDITION}.list.chroot" config/package-lists/
+            else
+              cp "${REPO_ROOT}/config/package-lists/desktop.list.chroot" config/package-lists/
+            fi
+          fi
+
+          # --- Copy hooks ---
+          mkdir -p config/hooks/live
+          cp "${REPO_ROOT}/config/hooks/"*.hook.chroot config/hooks/live/ 2>/dev/null || true
+
+          echo "✓ Package lists + hooks copied"
+          ls config/package-lists/
+          ls config/hooks/live/ 2>/dev/null || echo "(no hooks)"
+
+          # --- Build ---
+          echo ""
+          echo "========================================="
+          echo "  🔨 lb build starting..."
+          echo "========================================="
+
+          lb build 2>&1 | tee /tmp/build.log || {
+            echo "❌ lb build failed!"
+            tail -80 /tmp/build.log
+            exit 1
+          }
+
+          echo "✓ lb build complete"
+          ls -lh *.iso *.hybrid.iso 2>/dev/null || true
+
+      - name: 📦 Prepare artifacts
+        if: success()
+        run: |
+          set -euo pipefail
+          mkdir -p output
+
+          cd build/lb-${EDITION}
+          ISO=$(find . -maxdepth 1 \( -name "*.iso" -o -name "*.hybrid.iso" \) -type f | head -1)
+
+          if [ -z "$ISO" ]; then
+            echo "❌ No ISO found"
+            ls -la
+            exit 1
+          fi
+
+          cp "${ISO}" "${GITHUB_WORKSPACE}/output/${OUTPUT}.iso"
+          cd "${GITHUB_WORKSPACE}/output"
+          sha256sum "${OUTPUT}.iso" > "${OUTPUT}.sha256"
+
+          ISO_SIZE=$(du -h "${OUTPUT}.iso" | cut -f1)
+          echo "ISO_SIZE=${ISO_SIZE}" >> $GITHUB_ENV
+          echo "✓ ${OUTPUT}.iso (${ISO_SIZE})"
+
+      - name: 📊 Build summary
+        if: always()
+        run: |
+          echo "## 🇸🇳 TérangaOS Build" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Edition | ${EDITION:-?} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Arch | ${ARCH:-?} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Size | ${ISO_SIZE:-failed} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: 📤 Upload ISO
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.OUTPUT }}
+          path: output/*
+          retention-days: 14
+
+      - name: 📤 Upload build log (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log-${{ github.event.inputs.edition }}
+          path: /tmp/build.log
+          retention-days: 7

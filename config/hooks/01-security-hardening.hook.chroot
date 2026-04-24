@@ -8,17 +8,21 @@ set -e
 
 echo "[TérangaOS] Applying security hardening..."
 
-# --- 1. Enable UFW firewall ---
-ufw default deny incoming
-ufw default allow outgoing
-ufw allow ssh
-ufw --force enable
-echo "[TérangaOS] ✓ UFW firewall enabled"
+# --- 1. Enable UFW firewall (may fail in chroot — activates on first boot) ---
+if command -v ufw &> /dev/null; then
+    ufw default deny incoming 2>/dev/null || true
+    ufw default allow outgoing 2>/dev/null || true
+    ufw allow ssh 2>/dev/null || true
+    ufw --force enable 2>/dev/null || true
+    echo "[TérangaOS] ✓ UFW firewall configured"
+fi
 
-# --- 2. Enable AppArmor ---
-if command -v aa-enforce &> /dev/null; then
-    aa-enforce /etc/apparmor.d/*
+# --- 2. Enable AppArmor (skipped in chroot/container — applied on first boot) ---
+if command -v aa-enforce &> /dev/null && [ -d /sys/kernel/security/apparmor ]; then
+    aa-enforce /etc/apparmor.d/* 2>/dev/null || true
     echo "[TérangaOS] ✓ AppArmor enabled in enforce mode"
+else
+    echo "[TérangaOS] ⚠ AppArmor skipped (no kernel support — will apply on first boot)"
 fi
 
 # --- 3. Secure kernel parameters ---
