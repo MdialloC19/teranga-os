@@ -12,7 +12,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
   <a href="#"><img src="https://img.shields.io/badge/Base-Debian%2012-red.svg" alt="Base: Debian 12"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Desktop-Xfce%204-blue.svg" alt="Desktop: Xfce"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Desktop-KDE%20Plasma%206-blue.svg" alt="Desktop: KDE Plasma 6"></a>
   <a href="#"><img src="https://img.shields.io/badge/Status-Alpha-orange.svg" alt="Status: Alpha"></a>
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg" alt="PRs Welcome"></a>
   <a href="https://github.com/MdialloC19/teranga-os/actions"><img src="https://github.com/MdialloC19/teranga-os/actions/workflows/ci.yml/badge.svg" alt="CI/CD"></a>
@@ -52,10 +52,28 @@
 
 ---
 
+## 📦 Available Editions
+
+| Edition | Desktop | Memory | Architecture | Use Case |
+|---------|---------|--------|--------------|----------|
+| **Desktop** | KDE Plasma 6 | 2GB+ | x86_64 | Full-featured PC/Laptop |
+| **RPi** | Xfce 4 | 512MB+ | ARM64 | Raspberry Pi 5 |
+| **Lightweight** | Xfce 4 | 512MB+ | x86_64 | Old hardware, low resources |
+| **Server** | None (CLI) | 256MB+ | x86_64 | Server, headless |
+
+**Which edition for you?**
+- 💻 **PC/Laptop**: Choose **Desktop** (KDE Plasma 6)
+- 🥧 **Raspberry Pi 5**: Choose **RPi** (lightweight Xfce)
+- 🖥️ **Old PC**: Choose **Lightweight** (optimized Xfce)
+- 🖲️ **Server**: Choose **Server** (CLI only)
+
+---
+
 ## Features
 
 ### 🖥️ Familiar Interface
-- **Xfce 4** desktop with Windows 11-style theme (Fluent Dark)
+- **Desktop Edition**: KDE Plasma 6 with Windows 11-style theme (Fluent Dark)
+- **RPi/Lightweight Edition**: Xfce 4 with Windows 11-style theme (Fluent Dark)
 - Start menu, taskbar, window snapping — exactly like Windows
 - **No terminal required** for daily use
 - Wallpapers featuring Senegal/African scenes

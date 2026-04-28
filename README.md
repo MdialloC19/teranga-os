@@ -12,7 +12,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
   <a href="#"><img src="https://img.shields.io/badge/Base-Debian%2012-red.svg" alt="Base: Debian 12"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Desktop-Xfce%204-blue.svg" alt="Desktop: Xfce"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Desktop-KDE%20Plasma%206-blue.svg" alt="Desktop: KDE Plasma 6"></a>
   <a href="#"><img src="https://img.shields.io/badge/Status-Alpha-orange.svg" alt="Status: Alpha"></a>
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg" alt="PRs Welcome"></a>
   <a href="https://github.com/MdialloC19/teranga-os/actions"><img src="https://github.com/MdialloC19/teranga-os/actions/workflows/ci.yml/badge.svg" alt="CI/CD"></a>
@@ -34,9 +34,26 @@ Pour les développeurs et contributeurs francophones
 
 ---
 
+## � Éditions Disponibles
+
+| Édition | Bureau | Mémoire | Arch | Utilisation |
+|---------|--------|---------|------|-------------|
+| **Desktop** | KDE Plasma 6 | 2GB+ | x86_64 | PC complet, bureaux |
+| **RPi** | Xfce 4 | 512MB+ | ARM64 | Raspberry Pi 5 |
+| **Leger** | Xfce 4 | 512MB+ | x86_64 | Ancien matériel, faible ressources |
+| **Server** | Aucun (CLI) | 256MB+ | x86_64 | Serveur, sans interface graphique |
+
+**Quelle édition pour vous?**
+- 💻 **PC/Laptop**: Choisissez **Desktop** (KDE Plasma 6)
+- 🥧 **Raspberry Pi 5**: Choisissez **RPi** (Xfce léger)
+- 🖥️ **Ancien PC**: Choisissez **Leger** (Xfce optimisé)
+- 🖲️ **Serveur**: Choisissez **Server** (CLI uniquement)
+
+---
+
 ## 🚀 About TérangaOS
 
-**TérangaOS** est une distribution Linux souveraine conçue pour les administrations, les entreprises et les citoyens africains. Basée sur **Debian Stable** avec un bureau **KDE Plasma 6** thémé pour ressembler à Windows, elle permet une transition en douceur depuis les systèmes propriétaires.
+**TérangaOS** est une distribution Linux souveraine conçue pour les administrations, les entreprises et les citoyens africains. Basée sur **Debian Stable**, elle offre plusieurs éditions: **KDE Plasma 6** pour desktop, **Xfce** pour matériel léger/RPi, et une édition **Server** CLI. Thémée pour ressembler à Windows, elle permet une transition en douceur depuis les systèmes propriétaires.
 
 ## 🚀 About TérangaOS
 
