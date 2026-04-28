@@ -1,0 +1,213 @@
+#!/bin/bash
+# ============================================================
+# TérangaOS — Xfce4 Windows-style configuration hook
+# Lightweight desktop configuration for RPi, Leger, Server
+# ============================================================
+
+set -e
+
+echo "[TérangaOS] Configuring Xfce4 (Windows-like theme)..."
+
+# --- 1. Create default Xfce4 profile ---
+SKEL_XFCE="/etc/skel/.config"
+mkdir -p "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml"
+
+# --- 2. Panel configuration (bottom taskbar, Windows-style) ---
+cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml" << 'XFCEPANEL'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-panel" version="1.0">
+  <property name="panels" type="array">
+    <value type="int" value="1"/>
+    <property name="panel-1" type="empty">
+      <property name="position" type="string" value="bottom"/>
+      <property name="length" type="uint" value="100"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="size" type="uint" value="48"/>
+      <property name="plugin-ids" type="array">
+        <value type="int" value="1"/>
+        <value type="int" value="2"/>
+        <value type="int" value="3"/>
+        <value type="int" value="4"/>
+        <value type="int" value="5"/>
+      </property>
+      <property name="background-alpha" type="uint" value="100"/>
+      <property name="background-color" type="string" value="2d2d31"/>
+      <property name="background-image-style" type="uint" value="0"/>
+
+      <!-- Plugin 1: Application Menu -->
+      <property name="plugin-1" type="empty">
+        <property name="type" type="string" value="applicationsmenu"/>
+        <property name="show-generic-names" type="bool" value="false"/>
+        <property name="opacity" type="uint" value="100"/>
+      </property>
+
+      <!-- Plugin 2: Taskbar / Window Switcher -->
+      <property name="plugin-2" type="empty">
+        <property name="type" type="string" value="tasklist"/>
+        <property name="show-labels" type="bool" value="true"/>
+        <property name="icon-size" type="uint" value="32"/>
+        <property name="grouping" type="uint" value="0"/>
+        <property name="include-all-workspaces" type="bool" value="true"/>
+      </property>
+
+      <!-- Plugin 3: System Tray -->
+      <property name="plugin-3" type="empty">
+        <property name="type" type="string" value="systray"/>
+        <property name="icon-size" type="uint" value="22"/>
+      </property>
+
+      <!-- Plugin 4: Clock -->
+      <property name="plugin-4" type="empty">
+        <property name="type" type="string" value="clock"/>
+        <property name="show-frame" type="bool" value="true"/>
+        <property name="show-seconds" type="bool" value="false"/>
+        <property name="timezone" type="string" value=""/>
+        <property name="mode" type="uint" value="2"/>
+      </property>
+
+      <!-- Plugin 5: Show Desktop -->
+      <property name="plugin-5" type="empty">
+        <property name="type" type="string" value="showdesktop"/>
+      </property>
+    </property>
+  </property>
+
+  <!-- Autohide disabled, always visible -->
+  <property name="autohide-behavior" type="uint" value="0"/>
+</channel>
+XFCEPANEL
+
+echo "[TérangaOS] ✓ Xfce4 panel configured (bottom taskbar)"
+
+# --- 3. Desktop theme configuration ---
+mkdir -p "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml"
+cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" << 'XFCETHEME'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xsettings" version="1.0">
+  <!-- GTK Theme -->
+  <property name="Net" type="empty">
+    <property name="ThemeName" type="string" value="Fluent-Dark"/>
+    <property name="IconThemeName" type="string" value="Fluent"/>
+    <property name="FontName" type="string" value="Inter 11"/>
+    <property name="CursorThemeName" type="string" value="Adwaita"/>
+    <property name="DoubleClickTime" type="int" value="400"/>
+    <property name="DndDragThreshold" type="int" value="8"/>
+  </property>
+
+  <!-- Color scheme (Fluent-Dark compatible) -->
+  <property name="Xft" type="empty">
+    <property name="Antialias" type="int" value="1"/>
+    <property name="Hinting" type="int" value="1"/>
+    <property name="HintStyle" type="string" value="hintslight"/>
+    <property name="RGBA" type="string" value="rgb"/>
+  </property>
+</channel>
+XFCETHEME
+
+echo "[TérangaOS] ✓ Xfce4 theme configured (Fluent-Dark)"
+
+# --- 4. Desktop configuration ---
+cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" << 'XFCEDESKTOP'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-desktop" version="1.0">
+  <property name="backdrop" type="empty">
+    <property name="screen0" type="empty">
+      <property name="monitor0" type="empty">
+        <property name="workspace0" type="empty">
+          <property name="last-image" type="string" value="/usr/share/backgrounds/terangaos/dakar-sunset.png"/>
+          <property name="image-style" type="int" value="5"/>
+          <property name="image-show" type="bool" value="true"/>
+        </property>
+      </property>
+    </property>
+  </property>
+
+  <!-- Desktop icon settings -->
+  <property name="desktop-icons" type="empty">
+    <property name="style" type="int" value="2"/>
+    <property name="icon-size" type="uint" value="48"/>
+    <property name="file-icons" type="empty">
+      <property name="show-home" type="bool" value="true"/>
+      <property name="show-filesystem" type="bool" value="false"/>
+      <property name="show-trash" type="bool" value="true"/>
+      <property name="show-removable" type="bool" value="true"/>
+    </property>
+  </property>
+</channel>
+XFCEDESKTOP
+
+echo "[TérangaOS] ✓ Xfce4 desktop configured (TérangaOS wallpaper)"
+
+# --- 5. Window Manager theme ---
+cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml" << 'XFCEWM'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfwm4" version="1.0">
+  <property name="general" type="empty">
+    <property name="theme" type="string" value="Fluent"/>
+    <property name="title_font" type="string" value="Sans Bold 11"/>
+    <property name="show_cycling_dialog" type="bool" value="true"/>
+    <property name="button_layout" type="string" value="C|HMX"/>
+    <property name="double_click_action" type="string" value="maximize"/>
+    <property name="click_to_focus" type="bool" value="true"/>
+    <property name="raise_on_click" type="bool" value="true"/>
+  </property>
+</channel>
+XFCEWM
+
+echo "[TérangaOS] ✓ Xfce4 window manager configured"
+
+# --- 6. File Manager (Thunar) ---
+cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/thunar.xml" << 'XFCETHUNAR'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="thunar" version="1.0">
+  <property name="last-view" type="string" value="ThunarDetailedListView"/>
+  <property name="last-show-hidden" type="bool" value="false"/>
+  <property name="last-detailed-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_SMALLER"/>
+  <property name="misc-show-thumbnails" type="bool" value="true"/>
+  <property name="misc-single-click" type="bool" value="false"/>
+  <property name="misc-confirm-close-multiple-tabs" type="bool" value="true"/>
+</channel>
+XFCETHUNAR
+
+echo "[TérangaOS] ✓ Thunar file manager configured"
+
+# --- 7. Firefox — Default configuration ---
+mkdir -p /usr/lib/firefox-esr/distribution
+cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
+{
+  "policies": {
+    "Homepage": {
+      "URL": "https://teranga-os.org/start",
+      "Locked": false,
+      "StartPage": "homepage"
+    },
+    "SearchEngines": {
+      "Default": "DuckDuckGo"
+    },
+    "EnableTrackingProtection": {
+      "Value": true,
+      "Locked": true,
+      "Cryptomining": true,
+      "Fingerprinting": true
+    },
+    "DNSOverHTTPS": {
+      "Enabled": true
+    },
+    "DisableTelemetry": true,
+    "DisableFirefoxStudies": true,
+    "DisablePocket": true,
+    "OfferToSaveLogins": true,
+    "NoDefaultBookmarks": true,
+    "DisplayBookmarksToolbar": "newtab"
+  }
+}
+FIREFOX
+
+echo "[TérangaOS] Firefox with DuckDuckGo + anti-tracking configured"
+
+echo "[TérangaOS] Xfce4 Windows-style configuration complete ✓"
+echo "[TérangaOS] - Bottom panel (Windows-style)"
+echo "[TérangaOS] - Fluent-Dark theme"
+echo "[TérangaOS] - TérangaOS wallpaper (Dakar sunset)"
+echo "[TérangaOS] - Firefox with DuckDuckGo + anti-tracking"
+echo "[TérangaOS] - Lightweight for Raspberry Pi / Leger"

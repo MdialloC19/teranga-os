@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 # TérangaOS — KDE Plasma configuration hook
-# Configures desktop to resemble Windows 11
+# Configures KDE desktop to resemble Windows 11 (desktop edition)
 # ============================================================
 
 set -e

@@ -132,9 +132,33 @@ build_edition() {
               config/package-lists/
     fi
 
-    # Copier les hooks
+    # Copy preseed configuration (edition-specific or fallback to desktop)
+    # Live-build expects preseed at config/preseed.cfg
+    if [ -f "../../config/preseed/${edition}.preseed.cfg" ]; then
+        cp "../../config/preseed/${edition}.preseed.cfg" config/preseed.cfg
+        log_info "Preseed: Using ${edition}.preseed.cfg"
+    else
+        cp ../../config/preseed/desktop.preseed.cfg config/preseed.cfg
+        log_info "Preseed: Using desktop.preseed.cfg (default)"
+    fi
+
+    # Copy hooks (organized structure: common + edition-specific)
     mkdir -p config/hooks/live
-    cp ../../config/hooks/*.hook.chroot config/hooks/live/ 2>/dev/null || true
+    
+    # Copy common hooks (security, branding - all editions)
+    cp ../../config/hooks/common/01-security-hardening.hook.chroot config/hooks/live/
+    cp ../../config/hooks/common/02-branding.hook.chroot config/hooks/live/
+    log_info "Common hooks: security hardening + branding"
+    
+    # Copy edition-specific theme hook
+    if [ "$edition" = "desktop" ]; then
+        cp ../../config/hooks/desktop/03-kde-windows-theme.hook.chroot config/hooks/live/
+        log_info "Theme hook: KDE Plasma (desktop edition)"
+    else
+        # RPi, Leger, Server use Xfce
+        cp ../../config/hooks/rpi/03-xfce-windows-theme.hook.chroot config/hooks/live/
+        log_info "Theme hook: Xfce lightweight (${edition} edition)"
+    fi
 
     # Launch build
     log_info "Starting build (may take 30-60 min)..."

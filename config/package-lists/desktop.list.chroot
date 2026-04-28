@@ -1,18 +1,22 @@
 # ============================================================
-# TérangaOS Desktop — Xfce + Fluent theme packages
+# TérangaOS Desktop — KDE Plasma + Fluent theme packages
 # Windows 11-like interface for standard workstations
 # Base: Debian 12 Bookworm
 # ============================================================
 
-# --- Xfce Desktop ---
-task-xfce-desktop
-xfce4
-xfce4-goodies
-xfce4-terminal
-xfce4-power-manager
-xfce4-screenshooter
-xfce4-taskmanager
-xfce4-whiskermenu-plugin
+# --- KDE Plasma Desktop ---
+task-kde-desktop
+kde-plasma-desktop
+kde-plasma-nm
+kde-plasma-pa
+kde-full
+konsole
+dolphin
+ark
+okular
+gwenview
+amarok
+ktorrent
 xfce4-clipman-plugin
 xfce4-pulseaudio-plugin
 xfce4-notifyd
