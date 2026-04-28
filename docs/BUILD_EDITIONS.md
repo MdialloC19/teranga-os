@@ -221,26 +221,68 @@ Authorized access only
 
 #### 3a. KDE Theme (`config/hooks/desktop/03-kde-windows-theme.hook.chroot`)
 
-Applied **only for Desktop edition**. Includes:
+Applied **only for Desktop edition**. Configures **KDE Plasma 6** for Windows 11-style appearance:
 
-```bash
-# KDE Plasma configuration
-~/.config/plasma-org.kde.plasma.desktop-appletsrc
-  - Panel at bottom
-  - Kickoff menu (Windows-like start menu)
-  - TaskManager widget
-  - System tray
-  
-# Global settings
-~/.config/kdeglobals
-  - ColorScheme: BreezeDark
-  - Font: Noto Sans
+**Panel Configuration (Bottom, Windows-like):**
+- Location: Bottom of screen, 48px height
+- Widgets: Kickoff menu (start), Tasklist (open windows), System tray, Clock
+- Alignment: Left-aligned (Windows style)
+- Shows open applications with thumbnails
 
-# File manager
-~/.config/dolphinrc
-  - Full path bar
-  - Detailed view
-```
+**Color Scheme (Fluent Dark):**
+- Colors: Grays (#1e1e2e to #e4e4e7) with Windows 11 blue accent (#0078d4)
+- Theme: Breeze Dark (built-in KDE theme)
+- Consistency with login screen and system apps
+
+**Window Management (Windows 11-compatible):**
+- Button layout: Close, Minimize, Maximize on RIGHT side (like Windows)
+- Double-click behavior (not single-click)
+- Focus follows click
+- Window placement: Smart
+
+**Typography:**
+- Font: Inter 11pt (elegant, readable, similar to Windows)
+- Menu font: Inter 11pt
+- Fixed-width: Noto Mono 10pt
+
+**Icon Theme:**
+- Theme: Fluent (Windows-style icons)
+- Consistent with login screen
+
+**Applications Configuration:**
+- Dolphin (file manager): Windows Explorer-like layout
+- LibreOffice: Tabbed/Ribbon UI mode
+- Firefox: DuckDuckGo search, privacy-first, tracking protection
+- Shortcuts: Win+D to show desktop, Meta+Tab for activities
+
+**Wallpaper:**
+- Default: `/usr/share/backgrounds/terangaos/dakar-sunset.png`
+- Shows on desktop and during login
+
+#### 3b. SDDM Login Screen (`config/hooks/desktop/04-sddm-theme.hook.chroot`)
+
+Applied **only for Desktop edition**. Configures the login screen with:
+
+**Login Screen Appearance:**
+- Background: Dakar sunset wallpaper (same as desktop)
+- Theme: Breeze (KDE's default dark theme)
+- Font: Inter 11pt
+- Colors: Fluent Dark (consistent with desktop)
+
+**Features:**
+- Displays wallpaper behind login form
+- Cursor theme: Adwaita (smooth, modern)
+- Language: French (fr_FR)
+- Keyboard layout: French (AZERTY)
+
+**How it's installed:**
+1. Hook copies wallpaper to `/usr/share/pixmaps/terangaos/`
+2. Creates SDDM config at `/etc/sddm.conf.d/terangaos.conf`
+3. Sets background image path
+4. Configures color scheme
+5. Sets font and cursor theme
+
+### Desktop-Specific Hooks
 
 ### RPi/Lightweight-Specific Hooks
 
@@ -447,7 +489,149 @@ grep -i preseed build.log
 
 ---
 
-## 📚 Related Files
+## 🪟 Customizing KDE Plasma for Windows-like Experience
+
+If you want to modify the KDE interface to better resemble Windows, this guide explains the key customization points:
+
+### Configuration Files
+
+KDE Plasma configuration files are stored in `~/.config/`:
+
+| File | Purpose | Windows Equivalent |
+|------|---------|-------------------|
+| `plasma-org.kde.plasma.desktop-appletsrc` | Panel layout and applets | Taskbar configuration |
+| `kdeglobals` | Global colors, fonts, theme | Windows appearance settings |
+| `kwinrc` | Window manager (buttons, focus) | Window management settings |
+| `dolphinrc` | File manager appearance | Windows Explorer settings |
+| `kglobalshortcutsrc` | Keyboard shortcuts | Keyboard shortcuts |
+
+### Key Customizations
+
+**1. Bottom Panel (Taskbar):**
+```ini
+[Containments][2]
+location=4              # 4 = bottom
+thickness=48            # height in pixels
+plugin=org.kde.panel
+```
+
+**2. Panel Widgets (in order):**
+- `org.kde.plasma.kickoff` — Start menu
+- `org.kde.plasma.icontasks` — Open windows (like Windows taskbar)
+- `org.kde.plasma.systemtray` — System tray
+- `org.kde.plasma.digitalclock` — Clock
+
+**3. Windows 11 Button Layout:**
+```ini
+[Windows]
+ButtonsOnLeft=          # empty = no buttons on left
+ButtonsOnRight=AXC      # A=Maximize, X=Close, C=Minimize on right
+```
+
+**4. Color Scheme (Fluent Dark):**
+```ini
+[ColorScheme]
+BackgroundColor=30,30,46             # Dark background
+DecorationFocus=0,120,212            # Windows 11 blue
+ForegroundColor=228,228,231          # Light text
+```
+
+**5. Fonts (Inter for elegance):**
+```ini
+[General]
+font=Inter,11,-1,5,50,0,0,0,0,0
+menuFont=Inter,11,-1,5,50,0,0,0,0,0
+```
+
+**6. Single-click vs Double-click:**
+```ini
+[KDE]
+SingleClick=false                    # false = double-click to open
+```
+
+**7. Wallpaper:**
+```ini
+[Containments][1][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/backgrounds/terangaos/dakar-sunset.png
+```
+
+### Where to Make Changes
+
+1. **In Build Hooks** (best for ISO distribution):
+   - Edit `config/hooks/desktop/03-kde-windows-theme.hook.chroot`
+   - Configuration files are written to `/etc/skel/.config/`
+   - Affects all new user accounts created after installation
+
+2. **On Live System** (for testing):
+   - Edit `~/.config/plasma-org.kde.plasma.desktop-appletsrc`
+   - Changes apply immediately
+   - Good for iterating before adding to hook
+
+3. **System-wide** (for all users):
+   - Edit `/etc/skel/.config/` files
+   - Affects new user accounts
+   - Use in build hooks for distribution
+
+### Testing Changes
+
+After modifying the hook:
+
+```bash
+# Rebuild the ISO
+sudo bash scripts/build-edition.sh --edition desktop
+
+# Boot and login
+# - New user accounts will get the updated configuration
+# - Existing users keep their current settings
+```
+
+If testing manually on a live system:
+
+```bash
+# Edit config file
+nano ~/.config/kdeglobals
+
+# Restart Plasma (some changes need it)
+kquitapp5 plasmashell && kstart5 plasmashell &
+
+# Or logout and login for full restart
+```
+
+### Advanced: Icon Theme & Cursors
+
+**Install custom icon theme:**
+```bash
+# In hook script:
+cp -r /root/terangaos/assets/branding/icons/Fluent \
+   /usr/share/icons/Fluent
+```
+
+**Set in kdeglobals:**
+```ini
+[Icons]
+Theme=Fluent
+```
+
+**Cursor theme:**
+```ini
+[General]
+cursorTheme=Adwaita
+cursorSize=24
+```
+
+### Advanced: Panel Height & Margins
+
+```ini
+[Containments][2]
+screenEdgeMargin=0          # distance from screen edge (0 = none)
+thickness=48                # panel height in pixels
+```
+
+Reduce thickness to 40 for compact, or increase to 56 for spacious.
+
+---
+
+
 
 - [scripts/build-edition.sh](../scripts/build-edition.sh) — Build orchestration
 - [config/editions.json](../config/editions.json) — Edition definitions

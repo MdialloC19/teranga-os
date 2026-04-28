@@ -1,0 +1,107 @@
+#!/bin/bash
+# SDDM Login Screen Configuration for Desktop Edition (KDE Plasma)
+# Sets up Windows 11-style login screen with TérangaOS branding
+
+set -e
+
+echo "→ Configuring SDDM (KDE login screen) for Windows-like appearance..."
+
+# Create SDDM config directory
+mkdir -p /etc/sddm.conf.d/
+mkdir -p /usr/share/pixmaps/terangaos/
+
+# Copy wallpaper to pixmaps
+if [ -f /root/terangaos/assets/branding/wallpapers/dakar-sunset.png ]; then
+  cp /root/terangaos/assets/branding/wallpapers/dakar-sunset.png \
+     /usr/share/pixmaps/terangaos/login-background.png
+  echo "✓ Wallpaper copied"
+fi
+
+# Create SDDM configuration
+cat > /etc/sddm.conf.d/terangaos.conf << 'EOF'
+# TérangaOS SDDM Configuration (Desktop Edition)
+# Windows 11-style login screen
+
+[General]
+Session=plasmawayland
+Relogin=false
+Session=plasmawayland
+Session=plasmaX11
+Cursor=Adwaita
+Font=Inter,11,-1,5,50,0,0,0,0,0
+numlock=on
+
+# Windows 11-style appearance
+Session=plasmaX11
+
+[Theme]
+# Use Breeze Dark theme
+Current=breeze
+
+[Users]
+# Hide user list for security
+Session=plasmaX11
+
+[General]
+# Enable background image
+Background=/usr/share/pixmaps/terangaos/login-background.png
+BackgroundMode=scale
+BackgroundColor=#1e1e2e
+
+# Keyboard layout (French)
+Keyboard=fr
+Keymap=fr
+
+# Session selection
+Session=plasmaX11
+Relogin=false
+
+# Font and appearance
+Font=Inter,11,-1,5,50,0,0,0,0,0
+Cursor=Adwaita
+Theme=breeze
+
+# Colors (Fluent Dark)
+[Colors]
+Background=#1e1e2e
+Foreground=#ffffff
+Highlight=#0078d4
+Text=#ffffff
+
+EOF
+
+echo "✓ SDDM configuration created"
+
+# Create KDE Plasma SDDM theme configuration
+mkdir -p /etc/sddm.conf.d/
+cat > /etc/sddm.conf.d/kde_settings.conf << 'EOF'
+# KDE Plasma 6 SDDM settings
+
+[General]
+Session=plasmaX11
+Relogin=false
+Cursor=Adwaita
+Theme=breeze
+Background=/usr/share/pixmaps/terangaos/login-background.png
+
+# Fluent Dark colors
+[Colors]
+Background=#1e1e2e
+Foreground=#e4e4e7
+Highlight=#0078d4
+Text=#e4e4e7
+
+EOF
+
+echo "✓ KDE SDDM theme settings applied"
+
+# Set proper permissions
+chmod 644 /etc/sddm.conf.d/terangaos.conf
+chmod 644 /etc/sddm.conf.d/kde_settings.conf
+chmod 644 /usr/share/pixmaps/terangaos/login-background.png
+
+echo "✓ SDDM configuration complete"
+echo "  - Login screen will display with TérangaOS wallpaper"
+echo "  - Theme: Breeze (Fluent Dark)"
+echo "  - Font: Inter 11pt"
+echo "  - Cursor: Adwaita"

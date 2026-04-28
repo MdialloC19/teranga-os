@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/branding/logo-banner.png" alt="TérangaOS Logo" width="600">
+  <img src="assets/branding/logo/logo.png" alt="TérangaOS Logo" width="200">
 </p>
 
 <h1 align="center">🇸🇳 TérangaOS</h1>
