@@ -1,0 +1,381 @@
+#!/bin/bash
+# ============================================================
+# TérangaOS — KDE Plasma 6 Configuration Hook
+# Configures KDE desktop to resemble Windows 11 (desktop edition)
+# Creates a familiar Windows 11-style interface
+# ============================================================
+
+set -e
+
+echo "→ Configuring KDE Plasma 6 for Windows 11-style interface..."
+
+# Create default KDE directories
+mkdir -p /etc/skel/.config/plasma-workspace/env/
+mkdir -p /etc/skel/.local/share/kservices5/
+
+# --- 1. KDE Plasma Panel Configuration (BOTTOM PANEL, Windows 11 style) ---
+cat > /etc/skel/.config/plasma-org.kde.plasma.desktop-appletsrc << 'PLASMA'
+[Containments][1]
+formfactor=0
+immutability=1
+lastScreen=0
+location=0
+plugin=org.kde.plasma.desktop
+wallpaper=org.kde.image
+wallpaperPlugin=org.kde.image
+
+[Containments][1][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/backgrounds/terangaos/dakar-sunset.png
+PreviewPlugins=
+
+[Containments][2]
+formfactor=2
+immutability=1
+lastScreen=0
+location=4
+plugin=org.kde.panel
+screenEdgeMargin=0
+thickness=48
+
+[Containments][2][Applets][1]
+immutability=1
+plugin=org.kde.plasma.kickoff
+
+[Containments][2][Applets][1][Configuration][General]
+favoritesPortedToNewConfigPrefix=true
+icon=start-here-kde
+
+[Containments][2][Applets][1][Shortcuts]
+global=Meta
+
+[Containments][2][Applets][2]
+immutability=1
+plugin=org.kde.plasma.icontasks
+
+[Containments][2][Applets][2][Configuration][General]
+launchers=
+maxStripes=1
+showOnlyCurrentDesktop=false
+showOnlyCurrentScreen=true
+
+[Containments][2][Applets][3]
+immutability=1
+plugin=org.kde.plasma.systemtray
+
+[Containments][2][Applets][3][Configuration]
+PreloadWeight=75
+
+[Containments][2][Applets][3][Configuration][General]
+extraItems=org.kde.plasma.networkmanagement,org.kde.plasma.pulseaudio,org.kde.plasma.bluetooth,org.kde.plasma.battery
+
+[Containments][2][Applets][4]
+immutability=1
+plugin=org.kde.plasma.digitalclock
+
+[Containments][2][Applets][4][Configuration][Appearance]
+dateFormat=shortDate
+displaySeconds=false
+fontFamily=Inter
+fontSize=11
+use24hFormat=1
+
+[Containments][2][Applets][5]
+immutability=1
+plugin=org.kde.plasma.showdesktop
+
+[Containments][2][General]
+AppletOrder=1;2;3;4;5
+alignment=left
+background=Oxygen
+lengthMode=fit
+offset=0
+panelVisibility=2
+
+[General]
+immutability=1
+PLASMA
+
+echo "✓ Panel configured (bottom, Windows 11 style)"
+
+# --- 2. Global KDE Configuration (Colors, Fonts, Theme) ---
+cat > /etc/skel/.config/kdeglobals << 'KDEGLOBALS'
+[$Version]
+update_info=kxkb.upd:kxkb,kaccess.upd:Fonts_Courier10Pitch,kaccess.upd:Fonts_General,kdisplaymanager.upd:kdisplayrc,kcminput.upd:mouse-behavior,kcmfonts.upd:Fonts_Global,kcmfonts.upd:Fonts_Fix,kcmfonts.upd:Fonts_General,kcmfonts.upd:Fonts_Menu,kcmfonts.upd:Fonts_Toolbar,kcmfonts.upd:Fonts_Tasks,kcmfonts.upd:Fonts_WindowTitle,kcmfonts.upd:Fonts_SmallestReadable
+
+[ColorScheme]
+BackgroundColor=30,30,46
+BackgroundContrast=0.1
+BackgroundIntensity=1
+DecorationColor=49,54,59
+DecorationHover=61,174,233
+DecorationFocus=0,120,212
+ForegroundColor=228,228,231
+ForegroundActive=255,255,255
+ForegroundInactive=142,143,147
+ForegroundLink=41,128,185
+ForegroundVisited=155,89,182
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundPositive=39,174,96
+BackgroundAlternate=49,54,59
+BackgroundNormal=49,54,59
+
+[Colors:Button]
+BackgroundColor=49,54,59
+BackgroundColorAlternate=49,54,59
+DecorationColor=49,54,59
+ForegroundColor=228,228,231
+
+[Colors:Selection]
+BackgroundColor=0,120,212
+ForegroundColor=255,255,255
+
+[Colors:Tooltip]
+BackgroundColor=49,54,59
+ForegroundColor=228,228,231
+
+[Colors:View]
+BackgroundColor=30,30,46
+BackgroundColorAlternate=45,45,58
+DecorationColor=49,54,59
+ForegroundColor=228,228,231
+
+[Colors:Window]
+BackgroundColor=49,54,59
+BackgroundColorAlternate=49,54,59
+DecorationColor=49,54,59
+ForegroundColor=228,228,231
+
+[General]
+ColorScheme=BreezeDark
+Name=Breeze Dark
+fixed=Noto Mono,10,-1,5,50,0,0,0,0,0
+font=Inter,11,-1,5,50,0,0,0,0,0
+menuFont=Inter,11,-1,5,50,0,0,0,0,0
+smallestReadableFont=Inter,8,-1,5,50,0,0,0,0,0
+toolBarFont=Inter,11,-1,5,50,0,0,0,0,0
+widgetStyle=Breeze
+
+[Icons]
+Theme=Fluent
+
+[KDE]
+AnimationDurationFactor=1
+LookAndFeelPackage=org.kde.breezedark.desktop
+SingleClick=false
+contrast=4
+widgetStyle=Breeze
+
+[WM]
+activeBackground=49,54,59
+activeBlend=228,228,231
+activeForeground=228,228,231
+inactiveBackground=49,54,59
+inactiveBlend=142,143,147
+inactiveForeground=142,143,147
+
+[PreviewSettings]
+MaximumRemoteSize=0
+MaximumSize=0
+KDEGLOBALS
+
+echo "✓ Global appearance configured (Fluent Dark, Inter font 11pt)"
+
+# --- 3. Window Manager (KWin) - Windows 11 button layout ---
+cat > /etc/skel/.config/kwinrc << 'KWIN'
+[General]
+ColorScheme=BreezeDark
+SingleClick=false
+
+[Compositing]
+Enabled=true
+Backend=opengl
+
+[Windows]
+ButtonsOnLeft=
+ButtonsOnRight=AXC
+CycleAllDesktops=false
+FocusPolicy=ClickToFocus
+NextFocusPrefersMouse=false
+Placement=Smart
+RollOverDesktops=false
+
+[org.kde.kdeclarative]
+WallpaperPlugin=org.kde.image
+KWIN
+
+echo "✓ Window manager configured (buttons: Close, Minimize, Maximize on right)"
+
+# --- 4. File Manager (Dolphin) - Windows Explorer-like ---
+mkdir -p /etc/skel/.config/
+cat > /etc/skel/.config/dolphinrc << 'DOLPHIN'
+[General]
+BrowseThroughArchives=true
+ConfirmDelete=true
+ConfirmTrash=true
+GlobalViewProps=true
+RootFirstInViewPropsContext=true
+ShowCopyLocation=true
+ShowDeleteWithShred=true
+ShowFullPath=true
+ShowStatusBar=true
+ShowToolTips=true
+TerminalApplication=konsole
+UseTrash=true
+ViewPropsTimestamp=2024-04-28T12:00:00
+
+[MainWindow]
+MenuBar=Disabled
+StatusBar=Enabled
+ToolBarsMovable=Disabled
+Window-Maximized=true
+
+[PreviewSettings]
+Plugins=directorythumbnail,imagethumbnail,jpegthumbnail
+ShowPreview=true
+
+[DetailsView]
+Compress=false
+DateFormat=3
+IconSize=32
+PreviewSize=22
+ShowAccessTime=false
+ShowDeleteTime=false
+ShowGroupColumn=true
+ShowModificationTime=true
+ShowOwnerColumn=true
+ShowPermissionsColumn=true
+ShowSizeColumn=true
+SortFoldersFirst=true
+DOLPHIN
+
+echo "✓ File manager (Dolphin) configured like Windows Explorer"
+
+# --- 5. LibreOffice - Tabbed interface (Ribbon UI) ---
+mkdir -p /etc/skel/.config/libreoffice/4/user/
+cat > /etc/skel/.config/libreoffice/4/user/registrymodifications.xcu << 'LIBREOFFICE'
+<?xml version="1.0" encoding="UTF-8"?>
+<oor:items xmlns:oor="http://openoffice.org/2001/registry"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <item oor:path="/org.openoffice.Office.UI/Sidebar"><prop oor:name="Visible"><value>true</value></prop></item>
+  <item oor:path="/org.openoffice.Office.UI.ToolbarMode/Applications/Writer"><prop oor:name="Active"><value>Tabbed</value></prop></item>
+  <item oor:path="/org.openoffice.Office.UI.ToolbarMode/Applications/Calc"><prop oor:name="Active"><value>Tabbed</value></prop></item>
+  <item oor:path="/org.openoffice.Office.UI.ToolbarMode/Applications/Impress"><prop oor:name="Active"><value>Tabbed</value></prop></item>
+</oor:items>
+LIBREOFFICE
+
+echo "✓ LibreOffice configured in Tabbed/Ribbon mode"
+
+# --- 6. Firefox - DuckDuckGo + Privacy ---
+mkdir -p /usr/lib/firefox-esr/distribution/
+cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
+{
+  "policies": {
+    "Homepage": {
+      "URL": "about:home",
+      "Locked": false,
+      "StartPage": "homepage"
+    },
+    "SearchEngines": {
+      "Default": "DuckDuckGo"
+    },
+    "EnableTrackingProtection": {
+      "Value": true,
+      "Locked": false,
+      "Cryptomining": true,
+      "Fingerprinting": true
+    },
+    "DNSOverHTTPS": {
+      "Enabled": true,
+      "Locked": false
+    },
+    "DisableTelemetry": true,
+    "DisableFirefoxStudies": true,
+    "DisablePocket": true,
+    "OfferToSaveLogins": false,
+    "DisplayBookmarksToolbar": "newtab"
+  }
+}
+FIREFOX
+
+echo "✓ Firefox configured (DuckDuckGo, privacy-first)"
+
+# --- 7. KDE Shortcuts - Windows-like behavior ---
+cat > /etc/skel/.config/kglobalshortcutsrc << 'SHORTCUTS'
+[plasmashell]
+activate widget = 
+clear-history = 
+clipboard_action = 
+cycleNextAction = 
+cyclePrevAction = 
+manage activities = Meta+Tab
+next activity = Meta+Tab
+previous activity = 
+show dashboard = 
+show-on-mouse-pos = Meta+V
+toggle do not disturb = 
+toggle-micmute = Meta+;
+update check = 
+
+[kwin]
+Activate Window Demanding Attention = Meta+Ctrl+A
+Decrease Opacity = 
+Expose = 
+ExposeAll = 
+Increase Opacity = 
+Kill Window = Meta+Ctrl+Esc
+MoveMouseToCenter = Meta+F6
+MoveMouseToFocus = Meta+F5
+MoveZoomDown = 
+MoveZoomLeft = 
+MoveZoomRight = 
+MoveZoomUp = 
+New Workspace = 
+NextDesktop = Meta+Right
+Overview = Meta+S
+PreviousDesktop = Meta+Left
+Remove Workspace = 
+Reverse = 
+Show Desktop = Win+D
+ShowDesktopGrid = 
+Suspend Compositing = Alt+Shift+F12
+Switch One Desktop Down = 
+Switch One Desktop Up = 
+Switch One Desktop to the Left = 
+Switch One Desktop to the Right = 
+Switch Window Down = Meta+Alt+Down
+Switch Window Left = Meta+Alt+Left
+Switch Window Right = Meta+Alt+Right
+Switch Window Up = Meta+Alt+Up
+Switch to Next Screen = 
+Switch to Previous Screen = 
+Switch to Screen 0 = 
+Switch to Screen 1 = 
+Switch to Screen 2 = 
+Switch to Screen 3 = 
+SHORTCUTS
+
+echo "✓ Keyboard shortcuts configured (Windows-compatible)"
+
+# --- 8. Set wallpaper path ---
+mkdir -p /usr/share/backgrounds/terangaos/
+if [ -f /root/terangaos/assets/branding/wallpapers/dakar-sunset.png ]; then
+  cp /root/terangaos/assets/branding/wallpapers/dakar-sunset.png \
+     /usr/share/backgrounds/terangaos/dakar-sunset.png
+  chmod 644 /usr/share/backgrounds/terangaos/dakar-sunset.png
+  echo "✓ Wallpaper installed (dakar-sunset.png)"
+fi
+
+echo ""
+echo "✓✓✓ KDE Plasma 6 Configuration Complete! ✓✓✓"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  🖥️  Bottom panel (Windows 11-style)"
+echo "  🪟 Buttons: Close, Minimize, Maximize (right)"
+echo "  🎨 Theme: Fluent Dark (Windows 11 colors)"
+echo "  📝 Font: Inter 11pt (elegant, readable)"
+echo "  🎯 Icons: Fluent theme"
+echo "  🖼️  Wallpaper: Dakar sunset"
+echo "  ⌨️  Shortcuts: Win+D (show desktop)"
+echo "  🔍 Firefox: DuckDuckGo + Privacy"
+echo "  📊 LibreOffice: Ribbon UI"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -2,7 +2,7 @@
   {
     "edition": "rpi",
     "name": "TérangaOS RPi Edition",
-    "description": "Raspberry Pi 5 Edition — Lightweight Xfce desktop",
+    "description": "Raspberry Pi 5 Edition — Lightweight Xfce desktop (512MB+ RAM, ARM64)",
     "base": "debian",
     "codename": "bookworm",
     "arch": "arm64",
@@ -21,11 +21,11 @@
   {
     "edition": "desktop",
     "name": "TérangaOS Desktop",
-    "description": "Desktop Edition — Standard x86_64 PC",
+    "description": "Desktop Edition — KDE Plasma 6 for x86_64 PC (2GB+ RAM, full-featured)",
     "base": "debian",
     "codename": "bookworm",
     "arch": "amd64",
-    "desktop": "xfce",
+    "desktop": "kde-plasma",
     "theme": "Fluent-Dark",
     "icons": "Fluent",
     "font": "Inter 11",
@@ -40,7 +40,7 @@
   {
     "edition": "leger",
     "name": "TérangaOS Lightweight",
-    "description": "Lightweight Edition — Legacy hardware (512 MB RAM)",
+    "description": "Lightweight Edition — Xfce for legacy/low-resource hardware (512MB RAM, x86_64)",
     "base": "debian",
     "codename": "bookworm",
     "arch": "amd64",
