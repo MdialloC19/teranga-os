@@ -1,28 +1,35 @@
 #!/bin/bash
 # ============================================================
-# TérangaOS — Xfce4 Windows-style configuration hook
-# Lightweight desktop configuration for RPi, Leger, Server
+# TérangaOS — Xfce4 Windows 11-style Configuration Hook
+# Lightweight desktop for RPi, Leger, Server editions
+# Creates familiar Windows-like interface on Xfce4
 # ============================================================
 
 set -e
 
-echo "[TérangaOS] Configuring Xfce4 (Windows-like theme)..."
+echo "→ Configuring Xfce4 for Windows 11-style interface (lightweight)..."
 
-# --- 1. Create default Xfce4 profile ---
-SKEL_XFCE="/etc/skel/.config"
-mkdir -p "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml"
+# Create Xfce4 config directories
+mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
+mkdir -p /etc/skel/.local/share/xfce4/
 
-# --- 2. Panel configuration (bottom taskbar, Windows-style) ---
-cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml" << 'XFCEPANEL'
+# --- 1. PANEL CONFIGURATION (Bottom taskbar, Windows-style) ---
+cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml << 'XFCEPANEL'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xfce4-panel" version="1.0">
   <property name="panels" type="array">
     <value type="int" value="1"/>
     <property name="panel-1" type="empty">
-      <property name="position" type="string" value="bottom"/>
+      <property name="autohide" type="bool" value="false"/>
+      <property name="autohide-behavior" type="uint" value="0"/>
+      <property name="background-alpha" type="uint" value="100"/>
+      <property name="background-color" type="string" value="2d2d31"/>
+      <property name="background-style" type="uint" value="0"/>
+      <property name="disable-struts" type="bool" value="false"/>
+      <property name="enable-struts" type="bool" value="true"/>
       <property name="length" type="uint" value="100"/>
-      <property name="position-locked" type="bool" value="true"/>
-      <property name="size" type="uint" value="48"/>
+      <property name="mode" type="uint" value="0"/>
+      <property name="nrows" type="uint" value="1"/>
       <property name="plugin-ids" type="array">
         <value type="int" value="1"/>
         <value type="int" value="2"/>
@@ -30,93 +37,142 @@ cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml" << 'XFCEPA
         <value type="int" value="4"/>
         <value type="int" value="5"/>
       </property>
-      <property name="background-alpha" type="uint" value="100"/>
-      <property name="background-color" type="string" value="2d2d31"/>
-      <property name="background-image-style" type="uint" value="0"/>
+      <property name="position" type="string" value="bottom"/>
+      <property name="position-locked" type="bool" value="true"/>
+      <property name="size" type="uint" value="48"/>
+      <property name="span-monitors" type="bool" value="true"/>
 
-      <!-- Plugin 1: Application Menu -->
+      <!-- Plugin 1: Application Menu (Start Menu) -->
       <property name="plugin-1" type="empty">
-        <property name="type" type="string" value="applicationsmenu"/>
-        <property name="show-generic-names" type="bool" value="false"/>
-        <property name="opacity" type="uint" value="100"/>
-      </property>
-
-      <!-- Plugin 2: Taskbar / Window Switcher -->
-      <property name="plugin-2" type="empty">
-        <property name="type" type="string" value="tasklist"/>
-        <property name="show-labels" type="bool" value="true"/>
+        <property name="button-title" type="string" value=""/>
+        <property name="custom-environment" type="bool" value="false"/>
         <property name="icon-size" type="uint" value="32"/>
+        <property name="pattern" type="string" value=""/>
+        <property name="show-button-title" type="bool" value="false"/>
+        <property name="show-generic-names" type="bool" value="false"/>
+        <property name="show-tooltips" type="bool" value="true"/>
+        <property name="type" type="string" value="applicationsmenu"/>
+      </property>
+
+      <!-- Plugin 2: Taskbar (Window buttons) -->
+      <property name="plugin-2" type="empty">
         <property name="grouping" type="uint" value="0"/>
-        <property name="include-all-workspaces" type="bool" value="true"/>
+        <property name="icon-size" type="uint" value="32"/>
+        <property name="include-all-workspaces" type="bool" value="false"/>
+        <property name="include-all-monitors" type="bool" value="false"/>
+        <property name="middle-click" type="uint" value="0"/>
+        <property name="scrolling-jump-to-first-window" type="bool" value="false"/>
+        <property name="show-handles" type="bool" value="true"/>
+        <property name="show-labels" type="bool" value="true"/>
+        <property name="show-only-minimized" type="bool" value="false"/>
+        <property name="show-tooltips" type="bool" value="true"/>
+        <property name="sort-order" type="uint" value="0"/>
+        <property name="type" type="string" value="tasklist"/>
+        <property name="urgency-notification" type="uint" value="1"/>
+        <property name="window-scrolling" type="bool" value="true"/>
       </property>
 
-      <!-- Plugin 3: System Tray -->
+      <!-- Plugin 3: System Tray (Clock, network, volume, etc.) -->
       <property name="plugin-3" type="empty">
-        <property name="type" type="string" value="systray"/>
+        <property name="hide-new-items" type="bool" value="false"/>
         <property name="icon-size" type="uint" value="22"/>
+        <property name="known-items" type="array">
+          <value type="string" value="xfce-power-manager"/>
+          <value type="string" value="xfce4-clipman-plugin"/>
+          <value type="string" value="xfce4-pulseaudio-plugin"/>
+          <value type="string" value="xfce4-netload-plugin"/>
+        </value>
+        <property name="type" type="string" value="systray"/>
       </property>
 
-      <!-- Plugin 4: Clock -->
+      <!-- Plugin 4: Digital Clock -->
       <property name="plugin-4" type="empty">
-        <property name="type" type="string" value="clock"/>
-        <property name="show-frame" type="bool" value="true"/>
+        <property name="digital-format" type="string" value="%H:%M"/>
+        type="string" value="true"/>
+        <property name="show-frame" type="bool" value="false"/>
+        <property name="show-military" type="bool" value="false"/>
         <property name="show-seconds" type="bool" value="false"/>
         <property name="timezone" type="string" value=""/>
-        <property name="mode" type="uint" value="2"/>
+        <property name="type" type="string" value="clock"/>
       </property>
 
-      <!-- Plugin 5: Show Desktop -->
+      <!-- Plugin 5: Show Desktop button -->
       <property name="plugin-5" type="empty">
+        <property name="icon" type="string" value="user-desktop"/>
         <property name="type" type="string" value="showdesktop"/>
       </property>
     </property>
   </property>
-
-  <!-- Autohide disabled, always visible -->
-  <property name="autohide-behavior" type="uint" value="0"/>
 </channel>
 XFCEPANEL
 
-echo "[TérangaOS] ✓ Xfce4 panel configured (bottom taskbar)"
+echo "✓ Panel configured (bottom taskbar, Windows 11-style)"
 
-# --- 3. Desktop theme configuration ---
-mkdir -p "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml"
-cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" << 'XFCETHEME'
+# --- 2. APPEARANCE SETTINGS (Fluent Dark theme) ---
+cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml << 'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
-  <!-- GTK Theme -->
+  <!-- GTK Theme Settings -->
   <property name="Net" type="empty">
+    <!-- Theme: Fluent Dark (Windows 11-like) -->
     <property name="ThemeName" type="string" value="Fluent-Dark"/>
+    
+    <!-- Icons: Fluent (Windows-like icons) -->
     <property name="IconThemeName" type="string" value="Fluent"/>
+    
+    <!-- Font: Inter for consistency -->
     <property name="FontName" type="string" value="Inter 11"/>
+    
+    <!-- Cursor -->
     <property name="CursorThemeName" type="string" value="Adwaita"/>
+    <property name="CursorSize" type="int" value="24"/>
+    
+    <!-- Behavior -->
     <property name="DoubleClickTime" type="int" value="400"/>
     <property name="DndDragThreshold" type="int" value="8"/>
+    <property name="EnableEventSounds" type="int" value="0"/>
   </property>
 
-  <!-- Color scheme (Fluent-Dark compatible) -->
+  <!-- Font Rendering (Anti-aliasing) -->
   <property name="Xft" type="empty">
     <property name="Antialias" type="int" value="1"/>
     <property name="Hinting" type="int" value="1"/>
     <property name="HintStyle" type="string" value="hintslight"/>
     <property name="RGBA" type="string" value="rgb"/>
+    <property name="DPI" type="int" value="96"/>
+  </property>
+
+  <!-- Color Scheme (Fluent Dark) -->
+  <property name="Gtk" type="empty">
+    <property name="ColorScheme" type="string" value="Fluent-Dark"/>
   </property>
 </channel>
 XFCETHEME
 
-echo "[TérangaOS] ✓ Xfce4 theme configured (Fluent-Dark)"
+echo "✓ Appearance configured (Fluent Dark, Inter font)"
 
-# --- 4. Desktop configuration ---
-cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" << 'XFCEDESKTOP'
+# --- 3. DESKTOP WALLPAPER & ICONS ---
+cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml << 'XFCEDESKTOP'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xfce4-desktop" version="1.0">
+  <!-- Wallpaper settings -->
   <property name="backdrop" type="empty">
     <property name="screen0" type="empty">
       <property name="monitor0" type="empty">
         <property name="workspace0" type="empty">
+          <!-- Wallpaper image -->
+          <property name="last-image" type="string" value="/usr/share/backgrounds/terangaos/dakar-sunset.png"/>
+          <!-- Style: 5 = stretched to fill -->
+          <property name="image-style" type="int" value="5"/>
+          <!-- Show image -->
+          <property name="image-show" type="bool" value="true"/>
+          <!-- Color (fallback if image not found) -->
+          <property name="color1" type="string" value="1e1e2e"/>
+          <property name="color2" type="string" value="1e1e2e"/>
+        </property>
+        <property name="workspace1" type="empty">
           <property name="last-image" type="string" value="/usr/share/backgrounds/terangaos/dakar-sunset.png"/>
           <property name="image-style" type="int" value="5"/>
-          <property name="image-show" type="bool" value="true"/>
         </property>
       </property>
     </property>
@@ -126,6 +182,7 @@ cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" << 'XFCE
   <property name="desktop-icons" type="empty">
     <property name="style" type="int" value="2"/>
     <property name="icon-size" type="uint" value="48"/>
+    <property name="font-size" type="uint" value="10"/>
     <property name="file-icons" type="empty">
       <property name="show-home" type="bool" value="true"/>
       <property name="show-filesystem" type="bool" value="false"/>
@@ -136,48 +193,93 @@ cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" << 'XFCE
 </channel>
 XFCEDESKTOP
 
-echo "[TérangaOS] ✓ Xfce4 desktop configured (TérangaOS wallpaper)"
+echo "✓ Desktop wallpaper configured (dakar-sunset.png)"
 
-# --- 5. Window Manager theme ---
-cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml" << 'XFCEWM'
+# --- 4. WINDOW MANAGER (Xfwm4) - Windows 11 button layout ---
+cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml << 'XFCEWM'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xfwm4" version="1.0">
   <property name="general" type="empty">
+    <!-- Button layout: C=close, H=hide, M=maximize, X=maximize (C|HMX = right side) -->
+    <property name="button-layout" type="string" value="C|HMX"/>
+    
+    <!-- Theme: Fluent (Windows 11-like) -->
     <property name="theme" type="string" value="Fluent"/>
-    <property name="title_font" type="string" value="Sans Bold 11"/>
-    <property name="show_cycling_dialog" type="bool" value="true"/>
-    <property name="button_layout" type="string" value="C|HMX"/>
-    <property name="double_click_action" type="string" value="maximize"/>
-    <property name="click_to_focus" type="bool" value="true"/>
-    <property name="raise_on_click" type="bool" value="true"/>
+    
+    <!-- Title font -->
+    <property name="title-font" type="string" value="Inter Bold 11"/>
+    
+    <!-- Behavior -->
+    <property name="activate-action" type="string" value="bring"/>
+    <property name="click-to-focus" type="bool" value="true"/>
+    <property name="cycle-apps-only" type="bool" value="false"/>
+    <property name="cycle-draw-frame" type="bool" value="true"/>
+    <property name="cycle-raise" type="bool" value="true"/>
+    <property name="double-click-action" type="string" value="maximize"/>
+    <property name="focus-delay" type="int" value="250"/>
+    <property name="focus-new" type="bool" value="true"/>
+    <property name="focus-raise" type="bool" value="false"/>
+    <property name="maximize-button-single-click" type="bool" value="false"/>
+    <property name="move-opacity" type="int" value="100"/>
+    <property name="placement-mode" type="string" value="center"/>
+    <property name="prevent-focus-stealing" type="bool" value="false"/>
+    <property name="raise-delay" type="int" value="250"/>
+    <property name="raise-on-click" type="bool" value="true"/>
+    <property name="raise-on-focus" type="bool" value="false"/>
+    <property name="resize-opacity" type="int" value="100"/>
+    <property name="show-cycling-dialog" type="bool" value="true"/>
+    <property name="snap-to-border" type="bool" value="true"/>
+    <property name="snap-to-windows" type="bool" value="true"/>
+    <property name="snap-width" type="int" value="10"/>
+    <property name="vblank-mode" type="string" value="auto"/>
+    <property name="workspace-cycling" type="bool" value="true"/>
+    <property name="wrap-workspaces" type="bool" value="true"/>
   </property>
 </channel>
 XFCEWM
 
-echo "[TérangaOS] ✓ Xfce4 window manager configured"
+echo "✓ Window manager configured (buttons: close/minimize/maximize on right)"
 
-# --- 6. File Manager (Thunar) ---
-cat > "${SKEL_XFCE}/xfce4/xfconf/xfce-perchannel-xml/thunar.xml" << 'XFCETHUNAR'
+# --- 5. FILE MANAGER (Thunar) - Windows Explorer-like ---
+cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml << 'XFCETHUNAR'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="thunar" version="1.0">
+  <!-- Display settings -->
   <property name="last-view" type="string" value="ThunarDetailedListView"/>
-  <property name="last-show-hidden" type="bool" value="false"/>
+  <property name="last-icon-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_NORMAL"/>
   <property name="last-detailed-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_SMALLER"/>
-  <property name="misc-show-thumbnails" type="bool" value="true"/>
+  <property name="last-separator-position" type="int" value="170"/>
+  
+  <!-- Behavior -->
   <property name="misc-single-click" type="bool" value="false"/>
   <property name="misc-confirm-close-multiple-tabs" type="bool" value="true"/>
+  <property name="misc-confirm-delete" type="bool" value="true"/>
+  <property name="misc-enable-edit-thumbnails" type="bool" value="false"/>
+  <property name="misc-show-about-templates" type="bool" value="true"/>
+  <property name="misc-show-thumbnails" type="bool" value="true"/>
+  <property name="misc-show-thumbnails-draw-borders" type="bool" value="true"/>
+  <property name="misc-thumbnail-draw-frames" type="bool" value="true"/>
+  
+  <!-- Folder settings -->
+  <property name="last-show-hidden" type="bool" value="false"/>
+  <property name="misc-middle-click-in-tab-bar-new-tab" type="bool" value="true"/>
+  <property name="misc-recursive-permissions" type="string" value="THUNAR_RECURSIVE_PERMISSIONS_NONE"/>
+  
+  <!-- Side pane: show folders/history -->
+  <property name="last-side-pane" type="string" value="ThunarSidePane"/>
+  <property name="side-pane-visible" type="bool" value="true"/>
 </channel>
 XFCETHUNAR
 
-echo "[TérangaOS] ✓ Thunar file manager configured"
+echo "✓ File manager (Thunar) configured (Windows Explorer-like)"
 
-# --- 7. Firefox — Default configuration ---
-mkdir -p /usr/lib/firefox-esr/distribution
+# --- 6. FIREFOX - DuckDuckGo + Privacy-first ---
+mkdir -p /usr/lib/firefox-esr/distribution/
 cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
 {
   "policies": {
     "Homepage": {
-      "URL": "https://teranga-os.org/start",
+      "URL": "about:home",
       "Locked": false,
       "StartPage": "homepage"
     },
@@ -186,28 +288,67 @@ cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
     },
     "EnableTrackingProtection": {
       "Value": true,
-      "Locked": true,
+      "Locked": false,
       "Cryptomining": true,
       "Fingerprinting": true
     },
     "DNSOverHTTPS": {
-      "Enabled": true
+      "Enabled": true,
+      "Locked": false
     },
     "DisableTelemetry": true,
     "DisableFirefoxStudies": true,
     "DisablePocket": true,
-    "OfferToSaveLogins": true,
-    "NoDefaultBookmarks": true,
+    "OfferToSaveLogins": false,
     "DisplayBookmarksToolbar": "newtab"
   }
 }
 FIREFOX
 
-echo "[TérangaOS] Firefox with DuckDuckGo + anti-tracking configured"
+echo "✓ Firefox configured (DuckDuckGo, privacy-first)"
 
-echo "[TérangaOS] Xfce4 Windows-style configuration complete ✓"
-echo "[TérangaOS] - Bottom panel (Windows-style)"
-echo "[TérangaOS] - Fluent-Dark theme"
-echo "[TérangaOS] - TérangaOS wallpaper (Dakar sunset)"
-echo "[TérangaOS] - Firefox with DuckDuckGo + anti-tracking"
-echo "[TérangaOS] - Lightweight for Raspberry Pi / Leger"
+# --- 7. INSTALL WALLPAPER ---
+mkdir -p /usr/share/backgrounds/terangaos/
+if [ -f /root/terangaos/assets/branding/wallpapers/dakar-sunset.png ]; then
+  cp /root/terangaos/assets/branding/wallpapers/dakar-sunset.png \
+     /usr/share/backgrounds/terangaos/dakar-sunset.png
+  chmod 644 /usr/share/backgrounds/terangaos/dakar-sunset.png
+  echo "✓ Wallpaper installed (dakar-sunset.png)"
+fi
+
+# --- 8. KEYBOARD SHORTCUTS (Lightweight edition) ---
+cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml << 'XFCESHORTCUTS'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-keyboard-shortcuts" version="1.0">
+  <property name="commands" type="empty">
+    <!-- Show desktop: Super+D (Windows key) -->
+    <property name="Super_L+d" type="string" value="xfdesktop --toggle"/>
+    
+    <!-- Lock screen: Super+L -->
+    <property name="Super_L+l" type="string" value="xflock4"/>
+    
+    <!-- Alt+Tab: window switcher -->
+    <property name="Alt+Tab" type="string" value="xfwm4 --cycle-windows-backward"/>
+    
+    <!-- Super+Tab: reverse window switcher -->
+    <property name="Super_L+Tab" type="string" value="xfwm4 --cycle-windows"/>
+  </property>
+</channel>
+XFCESHORTCUTS
+
+echo "✓ Keyboard shortcuts configured (Win+D, Win+L, Alt+Tab)"
+
+echo ""
+echo "✓✓✓ Xfce4 Windows 11-style Configuration Complete! ✓✓✓"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  🖥️  Bottom panel (Windows taskbar-style)"
+echo "  🪟 Buttons: Close, Minimize, Maximize (right)"
+echo "  🎨 Theme: Fluent Dark (Windows 11 colors)"
+echo "  📝 Font: Inter 11pt"
+echo "  🎯 Icons: Fluent theme"
+echo "  🖼️  Wallpaper: Dakar sunset"
+echo "  ⌨️  Shortcuts: Win+D (desktop), Win+L (lock)"
+echo "  🔍 Firefox: DuckDuckGo + Privacy"
+echo "  📁 File manager: Thunar (Windows Explorer-like)"
+echo "  ⚡ Optimized for Raspberry Pi / Low-resource systems"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
