@@ -14,22 +14,30 @@ mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
 mkdir -p /etc/skel/.local/share/xfce4/
 
 # --- 0. DISABLE KEYRING PASSWORD PROMPT ON STARTUP ---
-# This prevents the "Unlock Keyring" dialog from blocking the session
-mkdir -p /etc/skel/.config/autostart
-cat > /etc/skel/.config/autostart/gnome-keyring-suppress.desktop << 'KEYRING'
-[Desktop Entry]
-Type=Application
-Exec=gnome-keyring-daemon --start --foreground
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=false
-KEYRING
-
-# Also create keyring PAM configuration to unlock automatically
+# Create empty keyring to prevent unlock prompts
 mkdir -p /etc/skel/.local/share/keyrings
-chmod 700 /etc/skel/.local/share/keyrings
 
-echo "✓ Keyring auto-unlock configured"
+# Create a default keyring with empty password (auto-unlocks)
+cat > /etc/skel/.local/share/keyrings/default.keyring << 'KEYRING_XML'
+<?xml version="1.0" encoding="UTF-8"?>
+<keyring>
+  <created>1000000000000000</created>
+  <modified>1000000000000000</modified>
+  <locked>false</locked>
+  <type>system</type>
+</keyring>
+KEYRING_XML
+
+chmod 600 /etc/skel/.local/share/keyrings/default.keyring
+
+# Disable keyring password prompt via environment variable
+mkdir -p /etc/skel/.config
+cat >> /etc/skel/.profile << 'EOF'
+# Disable GNOME Keyring password prompt
+export GNOME_KEYRING_CONTROL=
+EOF
+
+echo "✓ Keyring password prompt disabled"
 
 # --- 1. PANEL CONFIGURATION (Bottom taskbar, Windows-style) ---
 cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml << 'XFCEPANEL'

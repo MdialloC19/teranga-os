@@ -9,6 +9,31 @@ set -e
 
 echo "→ Configuring KDE Plasma 6 for Windows 11-style interface..."
 
+# --- 0. DISABLE KEYRING PASSWORD PROMPT ON STARTUP ---
+# Create empty keyring to prevent unlock prompts
+mkdir -p /etc/skel/.local/share/keyrings
+
+# Create a default keyring with empty password (auto-unlocks)
+cat > /etc/skel/.local/share/keyrings/default.keyring << 'KEYRING_XML'
+<?xml version="1.0" encoding="UTF-8"?>
+<keyring>
+  <created>1000000000000000</created>
+  <modified>1000000000000000</modified>
+  <locked>false</locked>
+  <type>system</type>
+</keyring>
+KEYRING_XML
+
+chmod 600 /etc/skel/.local/share/keyrings/default.keyring
+
+# Disable keyring password prompt via environment variable
+cat >> /etc/skel/.profile << 'EOF'
+# Disable GNOME Keyring password prompt
+export GNOME_KEYRING_CONTROL=
+EOF
+
+echo "✓ Keyring password prompt disabled"
+
 # Create default KDE directories
 mkdir -p /etc/skel/.config/plasma-workspace/env/
 mkdir -p /etc/skel/.local/share/kservices5/
