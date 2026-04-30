@@ -293,6 +293,7 @@ cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
     "DisableFirefoxStudies": true,
     "DisablePocket": true,
     "OfferToSaveLogins": false,
+    "OfferToSavePasswords": false,
     "DisplayBookmarksToolbar": "newtab"
   }
 }

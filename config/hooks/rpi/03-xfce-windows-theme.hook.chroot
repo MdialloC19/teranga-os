@@ -13,6 +13,24 @@ echo "→ Configuring Xfce4 for Windows 11-style interface (lightweight)..."
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
 mkdir -p /etc/skel/.local/share/xfce4/
 
+# --- 0. DISABLE KEYRING PASSWORD PROMPT ON STARTUP ---
+# This prevents the "Unlock Keyring" dialog from blocking the session
+mkdir -p /etc/skel/.config/autostart
+cat > /etc/skel/.config/autostart/gnome-keyring-suppress.desktop << 'KEYRING'
+[Desktop Entry]
+Type=Application
+Exec=gnome-keyring-daemon --start --foreground
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=false
+KEYRING
+
+# Also create keyring PAM configuration to unlock automatically
+mkdir -p /etc/skel/.local/share/keyrings
+chmod 700 /etc/skel/.local/share/keyrings
+
+echo "✓ Keyring auto-unlock configured"
+
 # --- 1. PANEL CONFIGURATION (Bottom taskbar, Windows-style) ---
 cat > /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml << 'XFCEPANEL'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -273,7 +291,7 @@ XFCETHUNAR
 
 echo "✓ File manager (Thunar) configured (Windows Explorer-like)"
 
-# --- 6. FIREFOX - DuckDuckGo + Privacy-first ---
+# --- 6. FIREFOX - DuckDuckGo + Privacy-first + No Keyring Issues ---
 mkdir -p /usr/lib/firefox-esr/distribution/
 cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
 {
@@ -300,12 +318,13 @@ cat > /usr/lib/firefox-esr/distribution/policies.json << 'FIREFOX'
     "DisableFirefoxStudies": true,
     "DisablePocket": true,
     "OfferToSaveLogins": false,
+    "OfferToSavePasswords": false,
     "DisplayBookmarksToolbar": "newtab"
   }
 }
 FIREFOX
 
-echo "✓ Firefox configured (DuckDuckGo, privacy-first)"
+echo "✓ Firefox configured (DuckDuckGo, privacy-first, no keyring interference)"
 
 # --- 7. WALLPAPER DIRECTORY (already installed via includes.chroot) ---
 mkdir -p /usr/share/backgrounds/terangaos/
