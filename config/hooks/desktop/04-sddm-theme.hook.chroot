@@ -10,11 +10,11 @@ echo "→ Configuring SDDM (KDE login screen) for Windows-like appearance..."
 mkdir -p /etc/sddm.conf.d/
 mkdir -p /usr/share/pixmaps/terangaos/
 
-# Copy wallpaper to pixmaps
-if [ -f /root/terangaos/assets/branding/wallpapers/dakar-sunset.png ]; then
-  cp /root/terangaos/assets/branding/wallpapers/dakar-sunset.png \
+# Copy wallpaper from backgrounds to pixmaps (already installed via includes.chroot)
+if [ -f /usr/share/backgrounds/terangaos/dakar-sunset.png ]; then
+  cp /usr/share/backgrounds/terangaos/dakar-sunset.png \
      /usr/share/pixmaps/terangaos/login-background.png
-  echo "✓ Wallpaper copied"
+  echo "✓ Login background configured"
 fi
 
 # Create SDDM configuration

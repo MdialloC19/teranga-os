@@ -307,13 +307,11 @@ FIREFOX
 
 echo "✓ Firefox configured (DuckDuckGo, privacy-first)"
 
-# --- 7. INSTALL WALLPAPER ---
+# --- 7. WALLPAPER DIRECTORY (already installed via includes.chroot) ---
 mkdir -p /usr/share/backgrounds/terangaos/
-if [ -f /root/terangaos/assets/branding/wallpapers/dakar-sunset.png ]; then
-  cp /root/terangaos/assets/branding/wallpapers/dakar-sunset.png \
-     /usr/share/backgrounds/terangaos/dakar-sunset.png
+if [ -f /usr/share/backgrounds/terangaos/dakar-sunset.png ]; then
   chmod 644 /usr/share/backgrounds/terangaos/dakar-sunset.png
-  echo "✓ Wallpaper installed (dakar-sunset.png)"
+  echo "✓ Wallpaper verified (dakar-sunset.png)"
 fi
 
 # --- 8. KEYBOARD SHORTCUTS (Lightweight edition) ---
